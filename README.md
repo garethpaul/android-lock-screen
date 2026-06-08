@@ -68,9 +68,3 @@ When the required SDK or runtime is unavailable, use static checks and source re
 ## Contributing
 
 Keep changes small and tied to the project that is already present in this repository. For code changes, document the toolchain used, avoid committing generated dependency directories or local configuration, and update this README when setup or verification steps change.
-
-## Existing Project Notes
-
-Prior README summary:
-
-> Android Lock Screen This repository is currently an empty placeholder. No Android implementation, Gradle project, tests, or app behavior have been committed yet. Future Baseline Before app code is added, establish: - A checked-in Gradle wrapper and Android Gradle Plugin version. - Documented compile SDK, target SDK, and minimum SDK choices. - A local test or source-check command that runs without device access.
