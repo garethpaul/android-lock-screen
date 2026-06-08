@@ -46,3 +46,6 @@ collecting personal data without clear purpose and controls.
 - Credential, signing, or local SDK files
 - Broad app scaffolding without README and verification notes
 - Background data collection unrelated to the lock-screen sample
+
+This list is a roadmap guardrail, not a permanent rule.
+Strong user demand and strong technical rationale can change it.
