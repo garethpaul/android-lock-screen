@@ -40,7 +40,7 @@ Lock-screen code interacts with a sensitive device surface. Future
 implementation must avoid bypassing user consent, weakening device security, or
 collecting personal data without clear purpose and controls.
 
-## What We Will Not Merge For Now
+## What We Will Not Merge (For Now)
 
 - Code that attempts to defeat platform lock-screen protections
 - Credential, signing, or local SDK files
