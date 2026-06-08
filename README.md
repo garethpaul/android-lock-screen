@@ -73,4 +73,4 @@ Keep changes small and tied to the project that is already present in this repos
 
 Prior README summary:
 
-> Android Lock Screen <!-- README-OVERVIEW-IMAGE --> This repository is currently an empty placeholder. No Android implementation, Gradle project, tests, or app behavior have been committed yet. Future Baseline Before app code is added, establish: - A checked-in Gradle wrapper and Android Gradle Plugin version. - Documented compile SDK, target SDK, and minimum SDK choices. - A local test or source-check command that runs without device access.
+> Android Lock Screen This repository is currently an empty placeholder. No Android implementation, Gradle project, tests, or app behavior have been committed yet. Future Baseline Before app code is added, establish: - A checked-in Gradle wrapper and Android Gradle Plugin version. - Documented compile SDK, target SDK, and minimum SDK choices. - A local test or source-check command that runs without device access.
