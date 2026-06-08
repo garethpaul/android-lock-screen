@@ -1,5 +1,8 @@
 # Android Lock Screen
 
+<!-- README-OVERVIEW-IMAGE -->
+![Project overview](docs/readme-overview.svg)
+
 This repository is currently an empty placeholder. No Android implementation,
 Gradle project, tests, or app behavior have been committed yet.
 
