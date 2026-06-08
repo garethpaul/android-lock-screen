@@ -36,6 +36,11 @@ Contribution rules:
 
 ## Security And Privacy
 
+Canonical security policy and reporting:
+
+- [`SECURITY.md`](SECURITY.md)
+
+
 Lock-screen code interacts with a sensitive device surface. Future
 implementation must avoid bypassing user consent, weakening device security, or
 collecting personal data without clear purpose and controls.
