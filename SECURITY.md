@@ -24,10 +24,13 @@ Helpful reports include:
 
 ## Project Security Posture
 
-- This repository appears to be a public sample, documentation, or utility project. The active security scope is the code and documentation on the default branch.
+- This repository appears to be an Android mobile application or sample. The active security scope is the code and documentation on the default branch.
 - Review found mobile permission or privacy-sensitive data handling; changes in those areas should receive security-focused review before merge.
 - No primary dependency manifest was detected in the repository root. If dependencies are added later, include a manifest and prefer reproducible installation instructions.
 
+## Mobile Privacy Notes
+
+If this project requests device permissions such as location, camera, microphone, contacts, Bluetooth, health data, or local storage access, reports should describe the permission involved and whether sensitive data can be accessed, persisted, or transmitted unexpectedly. Please avoid testing against real third-party user data or accounts you do not control.
 
 ## Dependency and Supply Chain Security
 
