@@ -1,5 +1,8 @@
 ## Android Lock Screen Vision
 
+This document explains the current state and direction of the project.
+Project overview and developer docs: [`README.md`](README.md)
+
 Android Lock Screen is currently an empty public repository reserved for an
 Android custom lock screen experiment.
 
