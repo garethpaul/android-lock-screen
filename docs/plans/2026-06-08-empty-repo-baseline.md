@@ -15,7 +15,7 @@ Establish a minimal baseline for the empty Android lock-screen repository so fut
 
 ## Problem Frame
 
-The repository currently has no committed source, build files, documentation, or tests. There is no implementation to modernize safely yet, so the highest-leverage first step is to make the empty state explicit and define the quality bar expected before app code is added.
+The repository currently has a project vision document but no committed source, build files, README, or tests. There is no implementation to modernize safely yet, so the highest-leverage first step is to make the empty state explicit and define the quality bar expected before app code is added.
 
 ---
 
@@ -78,5 +78,5 @@ The repository currently has no committed source, build files, documentation, or
 
 ## Sources / Research
 
-- `git status --short --branch` reports no commits on `master`.
-- `rg --files` returns no tracked project files.
+- `VISION.md` is the only tracked project artifact before this baseline.
+- `rg --files` returns no Android source, Gradle, or test files before this baseline.
