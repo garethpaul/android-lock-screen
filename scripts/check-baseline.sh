@@ -14,6 +14,11 @@ if [ ! -f "$PLAN_FILE" ]; then
   exit 1
 fi
 
+if [ ! -f "$ROOT_DIR/CHANGES.md" ]; then
+  printf '%s\n' "CHANGES.md is required for repository maintenance history." >&2
+  exit 1
+fi
+
 if ! grep -Fq "currently an empty placeholder" "$ROOT_DIR/README.md"; then
   printf '%s\n' "README must document the current empty repository state." >&2
   exit 1
@@ -21,6 +26,11 @@ fi
 
 if ! grep -Fq "Future Baseline" "$ROOT_DIR/README.md"; then
   printf '%s\n' "README must document future Android baseline expectations." >&2
+  exit 1
+fi
+
+if ! grep -Fq "CHANGES.md" "$ROOT_DIR/README.md"; then
+  printf '%s\n' "README must document the repository change log." >&2
   exit 1
 fi
 

@@ -23,3 +23,8 @@ scripts/check-baseline.sh
 
 This check does not require an Android SDK because there is no Android project
 to build yet.
+
+## Change Log
+
+Repository maintenance changes are recorded in `CHANGES.md` until an Android
+project exists with release notes or app-version metadata.
