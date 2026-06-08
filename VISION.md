@@ -1,0 +1,48 @@
+## Android Lock Screen Vision
+
+Android Lock Screen is currently an empty public repository reserved for an
+Android custom lock screen experiment.
+
+The only authoritative project context today is the repository description:
+"Android custom lock screen." There is no checked-in implementation or README
+yet.
+
+The goal is to keep the repository ready for a focused, well-documented sample
+rather than accumulate unclear scaffolding.
+
+The current focus is:
+
+Priority:
+
+- Establish basic project direction before adding code
+- Keep any future lock-screen behavior explicit about Android version support
+- Avoid committing secrets, signing material, or generated build output
+- Document setup and verification as soon as implementation exists
+
+Next priorities:
+
+- Add a README before or alongside the first implementation
+- Choose a modern Android baseline and document required permissions
+- Define whether this is a learning sample, a reusable component, or a full app
+- Add tests or manual verification steps for any lock-screen interaction
+
+Contribution rules:
+
+- One PR = one focused setup or implementation topic.
+- Do not add large generated project scaffolding without explaining the target
+  Android baseline.
+- Keep repository-root docs updated as soon as code is introduced.
+- Prefer a small working sample over broad unverified lock-screen behavior.
+
+## Security And Privacy
+
+Lock-screen code interacts with a sensitive device surface. Future
+implementation must avoid bypassing user consent, weakening device security, or
+collecting personal data without clear purpose and controls.
+
+## What We Will Not Merge For Now
+
+- Code that attempts to defeat platform lock-screen protections
+- Credential, signing, or local SDK files
+- Broad app scaffolding without README and verification notes
+- Background data collection unrelated to the lock-screen sample
