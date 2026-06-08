@@ -1,0 +1,19 @@
+# Local Android and Gradle state
+.gradle/
+.idea/
+build/
+captures/
+local.properties
+
+# Generated Android artifacts
+*.apk
+*.ap_
+*.aab
+*.dex
+
+# Java build output
+*.class
+
+# OS/editor noise
+.DS_Store
+*.swp
