@@ -19,6 +19,16 @@ if [ ! -f "$ROOT_DIR/CHANGES.md" ]; then
   exit 1
 fi
 
+if [ ! -f "$ROOT_DIR/Makefile" ]; then
+  printf '%s\n' "Makefile is required for the repository check wrapper." >&2
+  exit 1
+fi
+
+if [ ! -f "$ROOT_DIR/.gitignore" ]; then
+  printf '%s\n' ".gitignore is required before Android scaffolding is added." >&2
+  exit 1
+fi
+
 if ! grep -Fq "currently an empty placeholder" "$ROOT_DIR/README.md"; then
   printf '%s\n' "README must document the current empty repository state." >&2
   exit 1
@@ -31,6 +41,41 @@ fi
 
 if ! grep -Fq "CHANGES.md" "$ROOT_DIR/README.md"; then
   printf '%s\n' "README must document the repository change log." >&2
+  exit 1
+fi
+
+if ! grep -Fq "scripts/check-baseline.sh" "$ROOT_DIR/README.md"; then
+  printf '%s\n' "README must document the SDK-free baseline command." >&2
+  exit 1
+fi
+
+if ! grep -Fq "make check" "$ROOT_DIR/README.md"; then
+  printf '%s\n' "README must document the make check wrapper." >&2
+  exit 1
+fi
+
+if ! grep -Fq "No Gradle project is checked in yet" "$ROOT_DIR/README.md"; then
+  printf '%s\n' "README must not imply an Android build exists yet." >&2
+  exit 1
+fi
+
+if ! grep -Fq "scripts/check-baseline.sh" "$ROOT_DIR/Makefile"; then
+  printf '%s\n' "Makefile must run the baseline script." >&2
+  exit 1
+fi
+
+if ! grep -Fq "local.properties" "$ROOT_DIR/.gitignore"; then
+  printf '%s\n' ".gitignore must exclude local Android SDK configuration." >&2
+  exit 1
+fi
+
+if grep -Fq "gradle assembleDebug" "$ROOT_DIR/README.md"; then
+  printf '%s\n' "README must not document Gradle assembly before a project exists." >&2
+  exit 1
+fi
+
+if grep -Fq "gradle test" "$ROOT_DIR/README.md"; then
+  printf '%s\n' "README must not document Gradle tests before a project exists." >&2
   exit 1
 fi
 
