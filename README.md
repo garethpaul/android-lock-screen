@@ -9,8 +9,9 @@
 Android custom lock-screen experiment. No Android implementation, Gradle
 project, tests, or app behavior have been committed yet.
 
-No Gradle project is checked in yet. Do not add build, test, or install
-commands until an Android project exists.
+No Gradle project is checked in yet. Do not add Gradle build, test, or install
+commands until an Android project exists; the repository-level `make build`
+target reports a skip for now.
 
 ## Repository Contents
 
@@ -43,6 +44,17 @@ Run the repository baseline check through the standard wrapper:
 ```sh
 make check
 ```
+
+The root Makefile also exposes the pre-push gate names:
+
+```sh
+make lint
+make test
+make build
+```
+
+`make build` does not produce an APK yet; it reports that no Android project is
+checked in and exits successfully.
 
 or run the underlying SDK-free script directly:
 

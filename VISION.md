@@ -22,6 +22,8 @@ Priority:
 - Keep any future lock-screen behavior explicit about Android version support
 - Avoid committing secrets, signing material, or generated build output
 - Document setup and verification as soon as implementation exists
+- Keep root lint, test, and guarded build gates available while the repository
+  remains implementation-free
 - Require a permission, consent, and device-admin design note before code lands
 - Keep a reusable security design template available before implementation
   scaffolding is added

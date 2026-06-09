@@ -111,6 +111,26 @@ if ! grep -Fq "scripts/check-baseline.sh" "$ROOT_DIR/Makefile"; then
   exit 1
 fi
 
+if ! grep -Fq "lint:" "$ROOT_DIR/Makefile"; then
+  printf '%s\n' "Makefile must expose an SDK-free lint gate." >&2
+  exit 1
+fi
+
+if ! grep -Fq "test:" "$ROOT_DIR/Makefile"; then
+  printf '%s\n' "Makefile must expose an SDK-free test gate." >&2
+  exit 1
+fi
+
+if ! grep -Fq "build:" "$ROOT_DIR/Makefile"; then
+  printf '%s\n' "Makefile must expose a guarded build gate." >&2
+  exit 1
+fi
+
+if ! grep -Fq "verify: lint test build" "$ROOT_DIR/Makefile"; then
+  printf '%s\n' "Makefile verify must run lint, test, and build gates." >&2
+  exit 1
+fi
+
 if ! grep -Fq "local.properties" "$ROOT_DIR/.gitignore"; then
   printf '%s\n' ".gitignore must exclude local Android SDK configuration." >&2
   exit 1

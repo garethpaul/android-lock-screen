@@ -2,6 +2,8 @@
 
 ## 2026-06-09
 
+- Added SDK-free `make lint`, `make test`, and guarded `make build` targets so
+  the empty repository still exposes the standard pre-push gate names.
 - Added a lock-screen permission/security design template and SDK-free checks
   requiring future implementation work to use it before code lands.
 - Updated `VISION.md` to reflect the current documentation baseline while
