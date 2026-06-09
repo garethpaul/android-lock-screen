@@ -1,5 +1,10 @@
 # Changes
 
+## 2026-06-09
+
+- Added a lock-screen permission/security design template and SDK-free checks
+  requiring future implementation work to use it before code lands.
+
 ## 2026-06-08
 
 - Tightened the empty-repository README contract so generated docs cannot imply

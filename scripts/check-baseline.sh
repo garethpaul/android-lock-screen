@@ -4,6 +4,7 @@ set -eu
 ROOT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-08-empty-repo-baseline.md"
 SECURITY_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-09-lock-screen-permission-design-baseline.md"
+DESIGN_TEMPLATE_FILE="$ROOT_DIR/docs/templates/lock-screen-permission-design.md"
 
 if [ ! -f "$ROOT_DIR/README.md" ]; then
   printf '%s\n' "README.md is required for the empty repository baseline." >&2
@@ -17,6 +18,11 @@ fi
 
 if [ ! -f "$SECURITY_PLAN_FILE" ]; then
   printf '%s\n' "Future lock-screen permission design plan is missing." >&2
+  exit 1
+fi
+
+if [ ! -f "$DESIGN_TEMPLATE_FILE" ]; then
+  printf '%s\n' "Future lock-screen permission design template is missing." >&2
   exit 1
 fi
 
@@ -70,6 +76,11 @@ if ! grep -Fq "permission and consent design note" "$ROOT_DIR/README.md"; then
   exit 1
 fi
 
+if ! grep -Fq "docs/templates/lock-screen-permission-design.md" "$ROOT_DIR/README.md"; then
+  printf '%s\n' "README must link the future permission design template." >&2
+  exit 1
+fi
+
 if ! grep -Fq "device-admin or device-owner behavior" "$ROOT_DIR/README.md"; then
   printf '%s\n' "README must call out future device-admin/device-owner behavior." >&2
   exit 1
@@ -89,6 +100,20 @@ if ! grep -Fq "local.properties" "$ROOT_DIR/.gitignore"; then
   printf '%s\n' ".gitignore must exclude local Android SDK configuration." >&2
   exit 1
 fi
+
+for pattern in \
+  "## Supported Android Versions" \
+  "## Permission And Consent Flow" \
+  "## Device Admin Or Device Owner Behavior" \
+  "## Background Execution" \
+  "## Data Handling" \
+  "## Manual Verification Matrix" \
+  "## Disable And Uninstall Path"; do
+  if ! grep -Fq "$pattern" "$DESIGN_TEMPLATE_FILE"; then
+    printf '%s\n' "Lock-screen design template is missing section: $pattern" >&2
+    exit 1
+  fi
+done
 
 if grep -Fq "gradle assembleDebug" "$ROOT_DIR/README.md"; then
   printf '%s\n' "README must not document Gradle assembly before a project exists." >&2

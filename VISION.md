@@ -22,6 +22,8 @@ Priority:
 - Avoid committing secrets, signing material, or generated build output
 - Document setup and verification as soon as implementation exists
 - Require a permission, consent, and device-admin design note before code lands
+- Keep a reusable security design template available before implementation
+  scaffolding is added
 
 Next priorities:
 
