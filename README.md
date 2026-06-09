@@ -12,6 +12,8 @@ project, tests, or app behavior have been committed yet.
 No Gradle project is checked in yet. Do not add Gradle build, test, or install
 commands until an Android project exists; the repository-level `make build`
 target reports a skip for now.
+The SDK-free baseline fails if Android implementation artifacts appear while
+this empty-repository contract is still in force.
 
 ## Repository Contents
 
@@ -32,6 +34,8 @@ Before app code is added, establish:
 - A build command that produces a debug APK in a configured Android SDK.
 - CI or documented local gates for formatting, tests, and build verification.
 - Ignore rules for generated Android artifacts and local SDK configuration.
+- Replace the empty-repository baseline before adding Gradle files, Android
+  source directories, or app scaffolding.
 - A permission and consent design note that covers Android version support,
   device-admin or device-owner behavior, threat model, credential and
   biometric boundaries, accessibility-service boundaries, background execution,
@@ -64,7 +68,8 @@ scripts/check-baseline.sh
 ```
 
 This check does not require an Android SDK because there is no Android project
-to build yet.
+to build yet. It also fails if Android implementation artifacts appear before
+the empty-repository baseline is replaced.
 
 ## Security Baseline
 

@@ -2,6 +2,8 @@
 
 ## 2026-06-09
 
+- Added an empty-implementation gate so Gradle files or Android source
+  directories cannot land while the repository still claims no implementation.
 - Added accessibility-service boundary prompts to the lock-screen design
   template and SDK-free guards requiring future plans to keep them.
 - Added credential and biometric boundary prompts to the lock-screen design

@@ -8,6 +8,21 @@ DESIGN_TEMPLATE_FILE="$ROOT_DIR/docs/templates/lock-screen-permission-design.md"
 SECURITY_FILE="$ROOT_DIR/SECURITY.md"
 CREDENTIAL_BOUNDARY_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-09-lock-screen-credential-boundary-template.md"
 ACCESSIBILITY_BOUNDARY_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-09-lock-screen-accessibility-boundary-template.md"
+EMPTY_IMPLEMENTATION_GATE_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-09-lock-screen-empty-implementation-gate.md"
+
+for path in \
+  build.gradle \
+  settings.gradle \
+  gradlew \
+  gradlew.bat \
+  app \
+  Application \
+  src; do
+  if [ -e "$ROOT_DIR/$path" ]; then
+    printf '%s\n' "Empty repository baseline must be replaced before adding Android implementation artifacts: $path" >&2
+    exit 1
+  fi
+done
 
 if [ ! -f "$ROOT_DIR/README.md" ]; then
   printf '%s\n' "README.md is required for the empty repository baseline." >&2
@@ -36,6 +51,11 @@ fi
 
 if [ ! -f "$ACCESSIBILITY_BOUNDARY_PLAN_FILE" ]; then
   printf '%s\n' "Future lock-screen accessibility-boundary plan is missing." >&2
+  exit 1
+fi
+
+if [ ! -f "$EMPTY_IMPLEMENTATION_GATE_PLAN_FILE" ]; then
+  printf '%s\n' "Empty implementation gate plan is missing." >&2
   exit 1
 fi
 
@@ -96,6 +116,11 @@ fi
 
 if ! grep -Fq "No Gradle project is checked in yet" "$ROOT_DIR/README.md"; then
   printf '%s\n' "README must not imply an Android build exists yet." >&2
+  exit 1
+fi
+
+if ! grep -Fq "fails if Android implementation artifacts appear" "$ROOT_DIR/README.md"; then
+  printf '%s\n' "README must document the empty implementation gate." >&2
   exit 1
 fi
 
@@ -213,6 +238,11 @@ fi
 
 if ! grep -Fq "make check" "$ACCESSIBILITY_BOUNDARY_PLAN_FILE"; then
   printf '%s\n' "Lock-screen accessibility-boundary plan must document make check verification." >&2
+  exit 1
+fi
+
+if ! grep -Fq "make check" "$EMPTY_IMPLEMENTATION_GATE_PLAN_FILE"; then
+  printf '%s\n' "Lock-screen empty implementation gate plan must document make check verification." >&2
   exit 1
 fi
 

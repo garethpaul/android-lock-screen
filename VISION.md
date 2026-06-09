@@ -24,6 +24,8 @@ Priority:
 - Document setup and verification as soon as implementation exists
 - Keep root lint, test, and guarded build gates available while the repository
   remains implementation-free
+- Fail the empty-repository baseline if Android implementation artifacts appear
+  before the baseline is replaced
 - Require a permission, consent, and device-admin design note before code lands
 - Require a threat model before any sensitive lock-screen behavior lands
 - Require credential and biometric boundaries before authentication-adjacent
