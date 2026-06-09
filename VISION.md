@@ -7,8 +7,9 @@ Android Lock Screen is currently an empty public repository reserved for an
 Android custom lock screen experiment.
 
 The only authoritative project context today is the repository description:
-"Android custom lock screen." There is no checked-in implementation or README
-yet.
+"Android custom lock screen." The repository now has baseline README, changelog,
+security, verification, and permission-design docs, but no Android
+implementation or Gradle project is checked in.
 
 The goal is to keep the repository ready for a focused, well-documented sample
 rather than accumulate unclear scaffolding.
@@ -27,7 +28,7 @@ Priority:
 
 Next priorities:
 
-- Add a README before or alongside the first implementation
+- Keep README and verification notes current when implementation starts
 - Choose a modern Android baseline and document required permissions
 - Define whether this is a learning sample, a reusable component, or a full app
 - Add tests or manual verification steps for any lock-screen interaction

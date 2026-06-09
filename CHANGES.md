@@ -4,6 +4,8 @@
 
 - Added a lock-screen permission/security design template and SDK-free checks
   requiring future implementation work to use it before code lands.
+- Updated `VISION.md` to reflect the current documentation baseline while
+  preserving the no-implementation warning.
 
 ## 2026-06-08
 

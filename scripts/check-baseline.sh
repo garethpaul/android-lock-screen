@@ -46,6 +46,21 @@ if ! grep -Fq "currently an empty placeholder" "$ROOT_DIR/README.md"; then
   exit 1
 fi
 
+if grep -Fq "There is no checked-in implementation or README yet." "$ROOT_DIR/VISION.md"; then
+  printf '%s\n' "VISION must not claim README.md is missing after baseline docs exist." >&2
+  exit 1
+fi
+
+if ! grep -Fq "baseline README, changelog" "$ROOT_DIR/VISION.md"; then
+  printf '%s\n' "VISION must describe the current documentation baseline." >&2
+  exit 1
+fi
+
+if ! grep -Fq "implementation or Gradle project is checked in" "$ROOT_DIR/VISION.md"; then
+  printf '%s\n' "VISION must still document the lack of Android implementation." >&2
+  exit 1
+fi
+
 if ! grep -Fq "Future Baseline" "$ROOT_DIR/README.md"; then
   printf '%s\n' "README must document future Android baseline expectations." >&2
   exit 1
