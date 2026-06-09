@@ -33,8 +33,8 @@ Before app code is added, establish:
 - CI or documented local gates for formatting, tests, and build verification.
 - Ignore rules for generated Android artifacts and local SDK configuration.
 - A permission and consent design note that covers Android version support,
-  device-admin or device-owner behavior, background execution, and sensitive
-  data handling before any lock-screen code is added. Use
+  device-admin or device-owner behavior, threat model, background execution,
+  and sensitive data handling before any lock-screen code is added. Use
   `docs/templates/lock-screen-permission-design.md` as the starting structure.
 
 ## Verify
@@ -69,8 +69,8 @@ to build yet.
 
 Lock-screen implementation work must include a design note before code lands.
 That note should explain the intended Android APIs, requested permissions,
-user-consent flow, device-admin or device-owner assumptions, and manual
-verification steps on supported Android versions. Start from
+user-consent flow, device-admin or device-owner assumptions, threat model, and
+manual verification steps on supported Android versions. Start from
 `docs/templates/lock-screen-permission-design.md` so the permission, data, and
 rollback questions are answered consistently.
 

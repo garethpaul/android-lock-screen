@@ -140,6 +140,7 @@ for pattern in \
   "## Supported Android Versions" \
   "## Permission And Consent Flow" \
   "## Device Admin Or Device Owner Behavior" \
+  "## Threat Model" \
   "## Background Execution" \
   "## Data Handling" \
   "## Manual Verification Matrix" \
@@ -157,6 +158,16 @@ fi
 
 if grep -Fq "gradle test" "$ROOT_DIR/README.md"; then
   printf '%s\n' "README must not document Gradle tests before a project exists." >&2
+  exit 1
+fi
+
+if ! grep -Fq "threat model" "$ROOT_DIR/README.md"; then
+  printf '%s\n' "README must require a future lock-screen threat model." >&2
+  exit 1
+fi
+
+if ! grep -Fq "make check" "$ROOT_DIR/docs/plans/2026-06-09-lock-screen-threat-model-template.md"; then
+  printf '%s\n' "Lock-screen threat-model template plan must document make check verification." >&2
   exit 1
 fi
 

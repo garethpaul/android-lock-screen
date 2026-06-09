@@ -24,6 +24,14 @@ in `docs/plans/` with the implementation plan it supports.
 - User-visible disable path:
 - Restrictions intentionally not used:
 
+## Threat Model
+
+- Assets protected by the lock-screen behavior:
+- Trust boundaries crossed:
+- Misuse or bypass scenarios:
+- Mitigations built into the design:
+- Residual risks accepted:
+
 ## Background Execution
 
 - Services, receivers, alarms, jobs, or foreground notifications:

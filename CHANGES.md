@@ -2,6 +2,8 @@
 
 ## 2026-06-09
 
+- Added a threat-model section to the lock-screen permission design template
+  and an SDK-free guard requiring future plans to keep it.
 - Added SDK-free `make lint`, `make test`, and guarded `make build` targets so
   the empty repository still exposes the standard pre-push gate names.
 - Added a lock-screen permission/security design template and SDK-free checks
