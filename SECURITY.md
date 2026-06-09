@@ -32,6 +32,13 @@ Helpful reports include:
 
 If this project requests device permissions such as location, camera, microphone, contacts, Bluetooth, health data, or local storage access, reports should describe the permission involved and whether sensitive data can be accessed, persisted, or transmitted unexpectedly. Please avoid testing against real third-party user data or accounts you do not control.
 
+Future lock-screen implementation plans must document credential and biometric
+boundaries before code lands. The app must not spoof system authentication,
+collect unlock credentials, or blur the line between sample UI and platform
+credential prompts without an explicit design and verification note.
+Future plans must include credential and biometric boundaries before any
+authentication-adjacent UI or behavior is added.
+
 ## Dependency and Supply Chain Security
 
 Dependency updates should come from trusted package managers and should keep lockfiles in sync when lockfiles exist. Do not commit credentials, private keys, tokens, generated secrets, or machine-local configuration. If a vulnerability depends on a compromised package, typosquatting risk, insecure transitive dependency, or unsafe build step, include the package name, affected version, and the path through which it is used.

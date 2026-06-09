@@ -32,6 +32,14 @@ in `docs/plans/` with the implementation plan it supports.
 - Mitigations built into the design:
 - Residual risks accepted:
 
+## Credential And Biometric Boundaries
+
+- Credentials or biometric data intentionally not collected:
+- Any credential-like prompts shown by the app:
+- Android Keyguard, BiometricPrompt, or credential APIs used:
+- Boundaries that prevent spoofing system authentication:
+- User-visible recovery if unlock or authentication state changes:
+
 ## Background Execution
 
 - Services, receivers, alarms, jobs, or foreground notifications:

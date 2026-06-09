@@ -5,6 +5,8 @@ ROOT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-08-empty-repo-baseline.md"
 SECURITY_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-09-lock-screen-permission-design-baseline.md"
 DESIGN_TEMPLATE_FILE="$ROOT_DIR/docs/templates/lock-screen-permission-design.md"
+SECURITY_FILE="$ROOT_DIR/SECURITY.md"
+CREDENTIAL_BOUNDARY_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-09-lock-screen-credential-boundary-template.md"
 
 if [ ! -f "$ROOT_DIR/README.md" ]; then
   printf '%s\n' "README.md is required for the empty repository baseline." >&2
@@ -23,6 +25,11 @@ fi
 
 if [ ! -f "$DESIGN_TEMPLATE_FILE" ]; then
   printf '%s\n' "Future lock-screen permission design template is missing." >&2
+  exit 1
+fi
+
+if [ ! -f "$CREDENTIAL_BOUNDARY_PLAN_FILE" ]; then
+  printf '%s\n' "Future lock-screen credential-boundary plan is missing." >&2
   exit 1
 fi
 
@@ -141,6 +148,7 @@ for pattern in \
   "## Permission And Consent Flow" \
   "## Device Admin Or Device Owner Behavior" \
   "## Threat Model" \
+  "## Credential And Biometric Boundaries" \
   "## Background Execution" \
   "## Data Handling" \
   "## Manual Verification Matrix" \
@@ -166,8 +174,23 @@ if ! grep -Fq "threat model" "$ROOT_DIR/README.md"; then
   exit 1
 fi
 
+if ! grep -Fq "credential and biometric boundaries" "$ROOT_DIR/README.md"; then
+  printf '%s\n' "README must require future credential and biometric boundaries." >&2
+  exit 1
+fi
+
+if ! grep -Fq "credential and biometric boundaries" "$SECURITY_FILE"; then
+  printf '%s\n' "SECURITY must document future credential and biometric boundaries." >&2
+  exit 1
+fi
+
 if ! grep -Fq "make check" "$ROOT_DIR/docs/plans/2026-06-09-lock-screen-threat-model-template.md"; then
   printf '%s\n' "Lock-screen threat-model template plan must document make check verification." >&2
+  exit 1
+fi
+
+if ! grep -Fq "make check" "$CREDENTIAL_BOUNDARY_PLAN_FILE"; then
+  printf '%s\n' "Lock-screen credential-boundary plan must document make check verification." >&2
   exit 1
 fi
 
