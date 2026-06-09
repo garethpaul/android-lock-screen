@@ -7,6 +7,7 @@ SECURITY_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-09-lock-screen-permission-desig
 DESIGN_TEMPLATE_FILE="$ROOT_DIR/docs/templates/lock-screen-permission-design.md"
 SECURITY_FILE="$ROOT_DIR/SECURITY.md"
 CREDENTIAL_BOUNDARY_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-09-lock-screen-credential-boundary-template.md"
+ACCESSIBILITY_BOUNDARY_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-09-lock-screen-accessibility-boundary-template.md"
 
 if [ ! -f "$ROOT_DIR/README.md" ]; then
   printf '%s\n' "README.md is required for the empty repository baseline." >&2
@@ -30,6 +31,11 @@ fi
 
 if [ ! -f "$CREDENTIAL_BOUNDARY_PLAN_FILE" ]; then
   printf '%s\n' "Future lock-screen credential-boundary plan is missing." >&2
+  exit 1
+fi
+
+if [ ! -f "$ACCESSIBILITY_BOUNDARY_PLAN_FILE" ]; then
+  printf '%s\n' "Future lock-screen accessibility-boundary plan is missing." >&2
   exit 1
 fi
 
@@ -149,6 +155,7 @@ for pattern in \
   "## Device Admin Or Device Owner Behavior" \
   "## Threat Model" \
   "## Credential And Biometric Boundaries" \
+  "## Accessibility Service Boundary" \
   "## Background Execution" \
   "## Data Handling" \
   "## Manual Verification Matrix" \
@@ -179,8 +186,18 @@ if ! grep -Fq "credential and biometric boundaries" "$ROOT_DIR/README.md"; then
   exit 1
 fi
 
+if ! grep -Fq "accessibility-service boundaries" "$ROOT_DIR/README.md"; then
+  printf '%s\n' "README must require future accessibility-service boundaries." >&2
+  exit 1
+fi
+
 if ! grep -Fq "credential and biometric boundaries" "$SECURITY_FILE"; then
   printf '%s\n' "SECURITY must document future credential and biometric boundaries." >&2
+  exit 1
+fi
+
+if ! grep -Fq "accessibility-service boundaries" "$SECURITY_FILE"; then
+  printf '%s\n' "SECURITY must document future accessibility-service boundaries." >&2
   exit 1
 fi
 
@@ -191,6 +208,11 @@ fi
 
 if ! grep -Fq "make check" "$CREDENTIAL_BOUNDARY_PLAN_FILE"; then
   printf '%s\n' "Lock-screen credential-boundary plan must document make check verification." >&2
+  exit 1
+fi
+
+if ! grep -Fq "make check" "$ACCESSIBILITY_BOUNDARY_PLAN_FILE"; then
+  printf '%s\n' "Lock-screen accessibility-boundary plan must document make check verification." >&2
   exit 1
 fi
 

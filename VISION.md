@@ -28,6 +28,8 @@ Priority:
 - Require a threat model before any sensitive lock-screen behavior lands
 - Require credential and biometric boundaries before authentication-adjacent
   behavior lands
+- Require accessibility-service boundaries before accessibility-mediated
+  lock-screen behavior lands
 - Keep a reusable security design template available before implementation
   scaffolding is added
 

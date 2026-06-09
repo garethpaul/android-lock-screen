@@ -24,6 +24,14 @@ in `docs/plans/` with the implementation plan it supports.
 - User-visible disable path:
 - Restrictions intentionally not used:
 
+## Accessibility Service Boundary
+
+- Accessibility service required:
+- User benefit that cannot be met with less-sensitive APIs:
+- Event types observed:
+- Actions intentionally not performed:
+- Safeguards against credential capture or lock-screen bypass:
+
 ## Threat Model
 
 - Assets protected by the lock-screen behavior:

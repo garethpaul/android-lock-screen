@@ -2,6 +2,8 @@
 
 ## 2026-06-09
 
+- Added accessibility-service boundary prompts to the lock-screen design
+  template and SDK-free guards requiring future plans to keep them.
 - Added credential and biometric boundary prompts to the lock-screen design
   template and SDK-free guards requiring future plans to keep them.
 - Added a threat-model section to the lock-screen permission design template

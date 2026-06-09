@@ -38,6 +38,8 @@ collect unlock credentials, or blur the line between sample UI and platform
 credential prompts without an explicit design and verification note.
 Future plans must include credential and biometric boundaries before any
 authentication-adjacent UI or behavior is added.
+Future plans must also document accessibility-service boundaries before using
+accessibility APIs near lock-screen behavior.
 
 ## Dependency and Supply Chain Security
 
