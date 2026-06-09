@@ -3,6 +3,7 @@ set -eu
 
 ROOT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-08-empty-repo-baseline.md"
+SECURITY_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-09-lock-screen-permission-design-baseline.md"
 
 if [ ! -f "$ROOT_DIR/README.md" ]; then
   printf '%s\n' "README.md is required for the empty repository baseline." >&2
@@ -11,6 +12,11 @@ fi
 
 if [ ! -f "$PLAN_FILE" ]; then
   printf '%s\n' "Baseline plan is missing." >&2
+  exit 1
+fi
+
+if [ ! -f "$SECURITY_PLAN_FILE" ]; then
+  printf '%s\n' "Future lock-screen permission design plan is missing." >&2
   exit 1
 fi
 
@@ -56,6 +62,21 @@ fi
 
 if ! grep -Fq "No Gradle project is checked in yet" "$ROOT_DIR/README.md"; then
   printf '%s\n' "README must not imply an Android build exists yet." >&2
+  exit 1
+fi
+
+if ! grep -Fq "permission and consent design note" "$ROOT_DIR/README.md"; then
+  printf '%s\n' "README must require a future permission and consent design note." >&2
+  exit 1
+fi
+
+if ! grep -Fq "device-admin or device-owner behavior" "$ROOT_DIR/README.md"; then
+  printf '%s\n' "README must call out future device-admin/device-owner behavior." >&2
+  exit 1
+fi
+
+if ! grep -Fq "background execution" "$ROOT_DIR/README.md"; then
+  printf '%s\n' "README must call out future background execution behavior." >&2
   exit 1
 fi
 

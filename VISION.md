@@ -21,6 +21,7 @@ Priority:
 - Keep any future lock-screen behavior explicit about Android version support
 - Avoid committing secrets, signing material, or generated build output
 - Document setup and verification as soon as implementation exists
+- Require a permission, consent, and device-admin design note before code lands
 
 Next priorities:
 

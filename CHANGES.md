@@ -9,3 +9,5 @@
   change-log documentation.
 - Added a `make check` wrapper and Android/Gradle ignore rules for generated
   artifacts and local SDK configuration.
+- Added a future lock-screen permission and consent design-note requirement
+  before implementation code is introduced.

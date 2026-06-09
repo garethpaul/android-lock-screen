@@ -31,6 +31,9 @@ Before app code is added, establish:
 - A build command that produces a debug APK in a configured Android SDK.
 - CI or documented local gates for formatting, tests, and build verification.
 - Ignore rules for generated Android artifacts and local SDK configuration.
+- A permission and consent design note that covers Android version support,
+  device-admin or device-owner behavior, background execution, and sensitive
+  data handling before any lock-screen code is added.
 
 ## Verify
 
@@ -48,6 +51,13 @@ scripts/check-baseline.sh
 
 This check does not require an Android SDK because there is no Android project
 to build yet.
+
+## Security Baseline
+
+Lock-screen implementation work must include a design note before code lands.
+That note should explain the intended Android APIs, requested permissions,
+user-consent flow, device-admin or device-owner assumptions, and manual
+verification steps on supported Android versions.
 
 ## Change Log
 
