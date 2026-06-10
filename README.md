@@ -39,8 +39,8 @@ Before app code is added, establish:
 - A permission and consent design note that covers Android version support,
   device-admin or device-owner behavior, threat model, credential and
   biometric boundaries, accessibility-service boundaries, background execution,
-  emergency and system UI invariants, and sensitive data handling before any
-  lock-screen code is added. Use
+  emergency and system UI invariants, overlay and input integrity boundaries,
+  and sensitive data handling before any lock-screen code is added. Use
   `docs/templates/lock-screen-permission-design.md` as the starting structure.
 
 ## Verify
@@ -83,8 +83,8 @@ Lock-screen implementation work must include a design note before code lands.
 That note should explain the intended Android APIs, requested permissions,
 user-consent flow, device-admin or device-owner assumptions, threat model,
 credential and biometric boundaries, accessibility-service boundaries,
-emergency and system UI invariants, and manual verification steps on supported
-Android versions. Start from
+emergency and system UI invariants, overlay and input integrity boundaries, and
+manual verification steps on supported Android versions. Start from
 `docs/templates/lock-screen-permission-design.md` so the permission, data, and
 rollback questions are answered consistently.
 The design note must include credential and biometric boundaries before any

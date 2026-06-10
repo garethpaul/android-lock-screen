@@ -48,6 +48,15 @@ in `docs/plans/` with the implementation plan it supports.
 - Boundaries that prevent spoofing system authentication:
 - User-visible recovery if unlock or authentication state changes:
 
+## Overlay And Input Integrity
+
+- Overlay or draw-over-other-apps permissions requested:
+- Why standard Activity, Keyguard, or device-owner APIs are insufficient:
+- Obscured and partially obscured touch rejection:
+- Screenshot, screen recording, and screen-sharing boundaries:
+- Accessibility overlay and trusted system UI behavior:
+- Manual tapjacking and overlay-abuse verification:
+
 ## Background Execution
 
 - Services, receivers, alarms, jobs, or foreground notifications:

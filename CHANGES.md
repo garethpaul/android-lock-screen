@@ -5,6 +5,8 @@
 - Added emergency and system UI invariant prompts for future lock-screen
   designs, covering emergency access, calls/alarms, platform authentication,
   crash/reboot fail-safes, and safe-mode recovery.
+- Added overlay and input integrity prompts covering draw-over-apps permissions,
+  obscured touches, screen capture, accessibility overlays, and tapjacking.
 - Made the empty-repository checks location-independent and pinned CI to Ubuntu
   24.04 with superseded-run cancellation.
 - Added a pinned, read-only GitHub Actions check workflow that runs the existing

@@ -45,6 +45,9 @@ accessibility APIs near lock-screen behavior.
 Future plans must define emergency and system UI invariants so custom behavior
 cannot obscure emergency calling, incoming calls or alarms, platform
 authentication, or recovery after crashes, reboot, and safe mode.
+Future plans must also define overlay and input integrity boundaries, including
+obscured-touch rejection, screen-capture behavior, accessibility overlays, and
+tapjacking verification before sensitive UI is implemented.
 
 ## Dependency and Supply Chain Security
 

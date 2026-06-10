@@ -12,6 +12,7 @@ CREDENTIAL_BOUNDARY_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-09-lock-screen-crede
 ACCESSIBILITY_BOUNDARY_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-09-lock-screen-accessibility-boundary-template.md"
 EMPTY_IMPLEMENTATION_GATE_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-09-lock-screen-empty-implementation-gate.md"
 EMERGENCY_INVARIANTS_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-10-lock-screen-emergency-invariants.md"
+OVERLAY_INTEGRITY_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-10-lock-screen-overlay-input-integrity.md"
 
 for path in \
   build.gradle \
@@ -74,6 +75,11 @@ fi
 
 if [ ! -f "$EMERGENCY_INVARIANTS_PLAN_FILE" ]; then
   printf '%s\n' "Future lock-screen emergency-invariants plan is missing." >&2
+  exit 1
+fi
+
+if [ ! -f "$OVERLAY_INTEGRITY_PLAN_FILE" ]; then
+  printf '%s\n' "Future lock-screen overlay-integrity plan is missing." >&2
   exit 1
 fi
 
@@ -203,6 +209,7 @@ for pattern in \
   "## Device Admin Or Device Owner Behavior" \
   "## Threat Model" \
   "## Credential And Biometric Boundaries" \
+  "## Overlay And Input Integrity" \
   "## Accessibility Service Boundary" \
   "## Background Execution" \
   "## Emergency And System UI Invariants" \
@@ -211,6 +218,19 @@ for pattern in \
   "## Disable And Uninstall Path"; do
   if ! grep -Fq "$pattern" "$DESIGN_TEMPLATE_FILE"; then
     printf '%s\n' "Lock-screen design template is missing section: $pattern" >&2
+    exit 1
+  fi
+done
+
+for overlay_prompt in \
+  "Overlay or draw-over-other-apps permissions requested" \
+  "Why standard Activity, Keyguard, or device-owner APIs are insufficient" \
+  "Obscured and partially obscured touch rejection" \
+  "Screenshot, screen recording, and screen-sharing boundaries" \
+  "Accessibility overlay and trusted system UI behavior" \
+  "Manual tapjacking and overlay-abuse verification"; do
+  if ! grep -Fq "$overlay_prompt" "$DESIGN_TEMPLATE_FILE"; then
+    printf '%s\n' "Lock-screen design template is missing input-integrity prompt: $overlay_prompt" >&2
     exit 1
   fi
 done
@@ -258,6 +278,11 @@ if ! grep -Fq "emergency and system UI invariants" "$ROOT_DIR/README.md"; then
   exit 1
 fi
 
+if ! grep -Fq "overlay and input integrity boundaries" "$ROOT_DIR/README.md"; then
+  printf '%s\n' "README must require future overlay and input integrity boundaries." >&2
+  exit 1
+fi
+
 if ! grep -Fq "credential and biometric boundaries" "$SECURITY_FILE"; then
   printf '%s\n' "SECURITY must document future credential and biometric boundaries." >&2
   exit 1
@@ -270,6 +295,11 @@ fi
 
 if ! grep -Fq "emergency and system UI invariants" "$SECURITY_FILE"; then
   printf '%s\n' "SECURITY must document future emergency and system UI invariants." >&2
+  exit 1
+fi
+
+if ! grep -Fq "overlay and input integrity boundaries" "$SECURITY_FILE"; then
+  printf '%s\n' "SECURITY must document future overlay and input integrity boundaries." >&2
   exit 1
 fi
 
@@ -296,6 +326,12 @@ fi
 if ! grep -Fq "Status: Completed" "$EMERGENCY_INVARIANTS_PLAN_FILE" ||
    ! grep -Fq "make check" "$EMERGENCY_INVARIANTS_PLAN_FILE"; then
   printf '%s\n' "Emergency-invariants plan must record completed make check verification." >&2
+  exit 1
+fi
+
+if ! grep -Fq "Status: Completed" "$OVERLAY_INTEGRITY_PLAN_FILE" ||
+   ! grep -Fq "make check" "$OVERLAY_INTEGRITY_PLAN_FILE"; then
+  printf '%s\n' "Overlay-integrity plan must record completed make check verification." >&2
   exit 1
 fi
 
