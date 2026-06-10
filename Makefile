@@ -1,11 +1,13 @@
 .PHONY: build check lint test verify
 
+ROOT := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+
 lint:
-	sh -n scripts/check-baseline.sh
-	scripts/check-baseline.sh
+	sh -n $(ROOT)scripts/check-baseline.sh
+	$(ROOT)scripts/check-baseline.sh
 
 test:
-	scripts/check-baseline.sh
+	$(ROOT)scripts/check-baseline.sh
 
 build:
 	@echo "No Android project is checked in yet; build skipped."

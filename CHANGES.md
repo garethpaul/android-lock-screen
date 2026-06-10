@@ -2,6 +2,11 @@
 
 ## 2026-06-10
 
+- Added emergency and system UI invariant prompts for future lock-screen
+  designs, covering emergency access, calls/alarms, platform authentication,
+  crash/reboot fail-safes, and safe-mode recovery.
+- Made the empty-repository checks location-independent and pinned CI to Ubuntu
+  24.04 with superseded-run cancellation.
 - Added a pinned, read-only GitHub Actions check workflow that runs the existing
   empty-repository `make check` baseline with a bounded timeout.
 - Added an SDK-free guard requiring the CI workflow and completed CI baseline

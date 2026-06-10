@@ -34,6 +34,8 @@ Priority:
   behavior lands
 - Require accessibility-service boundaries before accessibility-mediated
   lock-screen behavior lands
+- Require emergency and system UI invariants before custom lock-screen behavior
+  can affect calling, alarms, authentication, reboot, or recovery paths
 - Keep a reusable security design template available before implementation
   scaffolding is added
 

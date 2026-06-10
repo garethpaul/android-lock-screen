@@ -55,6 +55,15 @@ in `docs/plans/` with the implementation plan it supports.
 - Battery and lifecycle constraints:
 - Expected behavior after reboot:
 
+## Emergency And System UI Invariants
+
+- Emergency calling and emergency information access:
+- Incoming calls, alarms, and critical system alerts:
+- System credential and biometric UI that must remain unobscured:
+- Behavior after process death, crash loops, reboot, and direct boot:
+- Fail-safe behavior when lock-screen state cannot be determined:
+- Recovery through safe mode or platform settings:
+
 ## Data Handling
 
 - Data read from the device:

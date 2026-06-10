@@ -11,6 +11,7 @@ SECURITY_FILE="$ROOT_DIR/SECURITY.md"
 CREDENTIAL_BOUNDARY_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-09-lock-screen-credential-boundary-template.md"
 ACCESSIBILITY_BOUNDARY_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-09-lock-screen-accessibility-boundary-template.md"
 EMPTY_IMPLEMENTATION_GATE_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-09-lock-screen-empty-implementation-gate.md"
+EMERGENCY_INVARIANTS_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-10-lock-screen-emergency-invariants.md"
 
 for path in \
   build.gradle \
@@ -68,6 +69,11 @@ fi
 
 if [ ! -f "$EMPTY_IMPLEMENTATION_GATE_PLAN_FILE" ]; then
   printf '%s\n' "Empty implementation gate plan is missing." >&2
+  exit 1
+fi
+
+if [ ! -f "$EMERGENCY_INVARIANTS_PLAN_FILE" ]; then
+  printf '%s\n' "Future lock-screen emergency-invariants plan is missing." >&2
   exit 1
 fi
 
@@ -199,11 +205,25 @@ for pattern in \
   "## Credential And Biometric Boundaries" \
   "## Accessibility Service Boundary" \
   "## Background Execution" \
+  "## Emergency And System UI Invariants" \
   "## Data Handling" \
   "## Manual Verification Matrix" \
   "## Disable And Uninstall Path"; do
   if ! grep -Fq "$pattern" "$DESIGN_TEMPLATE_FILE"; then
     printf '%s\n' "Lock-screen design template is missing section: $pattern" >&2
+    exit 1
+  fi
+done
+
+for emergency_prompt in \
+  "Emergency calling and emergency information access" \
+  "Incoming calls, alarms, and critical system alerts" \
+  "System credential and biometric UI that must remain unobscured" \
+  "Behavior after process death, crash loops, reboot, and direct boot" \
+  "Fail-safe behavior when lock-screen state cannot be determined" \
+  "Recovery through safe mode or platform settings"; do
+  if ! grep -Fq "$emergency_prompt" "$DESIGN_TEMPLATE_FILE"; then
+    printf '%s\n' "Lock-screen design template is missing invariant: $emergency_prompt" >&2
     exit 1
   fi
 done
@@ -233,6 +253,11 @@ if ! grep -Fq "accessibility-service boundaries" "$ROOT_DIR/README.md"; then
   exit 1
 fi
 
+if ! grep -Fq "emergency and system UI invariants" "$ROOT_DIR/README.md"; then
+  printf '%s\n' "README must require future emergency and system UI invariants." >&2
+  exit 1
+fi
+
 if ! grep -Fq "credential and biometric boundaries" "$SECURITY_FILE"; then
   printf '%s\n' "SECURITY must document future credential and biometric boundaries." >&2
   exit 1
@@ -240,6 +265,11 @@ fi
 
 if ! grep -Fq "accessibility-service boundaries" "$SECURITY_FILE"; then
   printf '%s\n' "SECURITY must document future accessibility-service boundaries." >&2
+  exit 1
+fi
+
+if ! grep -Fq "emergency and system UI invariants" "$SECURITY_FILE"; then
+  printf '%s\n' "SECURITY must document future emergency and system UI invariants." >&2
   exit 1
 fi
 
@@ -263,9 +293,17 @@ if ! grep -Fq "make check" "$EMPTY_IMPLEMENTATION_GATE_PLAN_FILE"; then
   exit 1
 fi
 
+if ! grep -Fq "Status: Completed" "$EMERGENCY_INVARIANTS_PLAN_FILE" ||
+   ! grep -Fq "make check" "$EMERGENCY_INVARIANTS_PLAN_FILE"; then
+  printf '%s\n' "Emergency-invariants plan must record completed make check verification." >&2
+  exit 1
+fi
+
 for workflow_contract in \
   "permissions:" \
   "contents: read" \
+  "runs-on: ubuntu-24.04" \
+  "cancel-in-progress: true" \
   "timeout-minutes: 5" \
   "workflow_dispatch:" \
   "actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10" \
@@ -275,6 +313,12 @@ for workflow_contract in \
     exit 1
   fi
 done
+
+
+if ! grep -Fq 'ROOT := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))' "$ROOT_DIR/Makefile"; then
+  printf '%s\n' "Makefile must resolve repository paths from its own location." >&2
+  exit 1
+fi
 
 if ! grep -Fq "Status: Completed" "$CI_PLAN_FILE" || ! grep -Fq "make check" "$CI_PLAN_FILE"; then
   printf '%s\n' "Lock-screen CI baseline plan must record completed status and make check verification." >&2

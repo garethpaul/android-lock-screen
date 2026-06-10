@@ -42,6 +42,9 @@ Future plans must include credential and biometric boundaries before any
 authentication-adjacent UI or behavior is added.
 Future plans must also document accessibility-service boundaries before using
 accessibility APIs near lock-screen behavior.
+Future plans must define emergency and system UI invariants so custom behavior
+cannot obscure emergency calling, incoming calls or alarms, platform
+authentication, or recovery after crashes, reboot, and safe mode.
 
 ## Dependency and Supply Chain Security
 
