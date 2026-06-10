@@ -24,6 +24,8 @@ Priority:
 - Document setup and verification as soon as implementation exists
 - Keep root lint, test, and guarded build gates available while the repository
   remains implementation-free
+- Keep GitHub Actions running the empty-repository `make check` baseline
+  before review
 - Fail the empty-repository baseline if Android implementation artifacts appear
   before the baseline is replaced
 - Require a permission, consent, and device-admin design note before code lands
@@ -48,6 +50,8 @@ Contribution rules:
 - Do not add large generated project scaffolding without explaining the target
   Android baseline.
 - Keep repository-root docs updated as soon as code is introduced.
+- Keep `.github/workflows/check.yml` aligned with the documented empty
+  repository baseline.
 - Prefer a small working sample over broad unverified lock-screen behavior.
 
 ## Security And Privacy

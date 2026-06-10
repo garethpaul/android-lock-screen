@@ -1,5 +1,12 @@
 # Changes
 
+## 2026-06-10
+
+- Added a pinned, read-only GitHub Actions check workflow that runs the existing
+  empty-repository `make check` baseline with a bounded timeout.
+- Added an SDK-free guard requiring the CI workflow and completed CI baseline
+  plan to remain checked in.
+
 ## 2026-06-09
 
 - Added an empty-implementation gate so Gradle files or Android source

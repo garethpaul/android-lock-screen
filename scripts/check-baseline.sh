@@ -3,6 +3,8 @@ set -eu
 
 ROOT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-08-empty-repo-baseline.md"
+CI_WORKFLOW="$ROOT_DIR/.github/workflows/check.yml"
+CI_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-10-ci-baseline.md"
 SECURITY_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-09-lock-screen-permission-design-baseline.md"
 DESIGN_TEMPLATE_FILE="$ROOT_DIR/docs/templates/lock-screen-permission-design.md"
 SECURITY_FILE="$ROOT_DIR/SECURITY.md"
@@ -31,6 +33,16 @@ fi
 
 if [ ! -f "$PLAN_FILE" ]; then
   printf '%s\n' "Baseline plan is missing." >&2
+  exit 1
+fi
+
+if [ ! -f "$CI_WORKFLOW" ]; then
+  printf '%s\n' "GitHub Actions check workflow is missing." >&2
+  exit 1
+fi
+
+if [ ! -f "$CI_PLAN_FILE" ]; then
+  printf '%s\n' "Lock-screen CI baseline plan is missing." >&2
   exit 1
 fi
 
@@ -111,6 +123,11 @@ fi
 
 if ! grep -Fq "make check" "$ROOT_DIR/README.md"; then
   printf '%s\n' "README must document the make check wrapper." >&2
+  exit 1
+fi
+
+if ! grep -Fq "GitHub Actions" "$ROOT_DIR/README.md"; then
+  printf '%s\n' "README must document the GitHub Actions baseline." >&2
   exit 1
 fi
 
@@ -243,6 +260,24 @@ fi
 
 if ! grep -Fq "make check" "$EMPTY_IMPLEMENTATION_GATE_PLAN_FILE"; then
   printf '%s\n' "Lock-screen empty implementation gate plan must document make check verification." >&2
+  exit 1
+fi
+
+for workflow_contract in \
+  "permissions:" \
+  "contents: read" \
+  "timeout-minutes: 5" \
+  "workflow_dispatch:" \
+  "actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10" \
+  "run: make check"; do
+  if ! grep -Fq "$workflow_contract" "$CI_WORKFLOW"; then
+    printf '%s\n' "GitHub Actions check workflow must keep contract: $workflow_contract" >&2
+    exit 1
+  fi
+done
+
+if ! grep -Fq "Status: Completed" "$CI_PLAN_FILE" || ! grep -Fq "make check" "$CI_PLAN_FILE"; then
+  printf '%s\n' "Lock-screen CI baseline plan must record completed status and make check verification." >&2
   exit 1
 fi
 

@@ -44,6 +44,11 @@ Before app code is added, establish:
 
 ## Verify
 
+GitHub Actions runs the same `make check` baseline through
+`.github/workflows/check.yml` on pushes, pull requests, and manual dispatches.
+The workflow uses immutable checkout, read-only permissions, and a five-minute
+timeout.
+
 Run the repository baseline check through the standard wrapper:
 
 ```sh
@@ -87,3 +92,6 @@ authentication-adjacent UI or behavior is added.
 
 Repository maintenance changes are recorded in `CHANGES.md` until an Android
 project exists with release notes or app-version metadata.
+
+The CI baseline is documented in
+`docs/plans/2026-06-10-ci-baseline.md`.
