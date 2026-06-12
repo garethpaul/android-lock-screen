@@ -13,6 +13,7 @@ ACCESSIBILITY_BOUNDARY_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-09-lock-screen-ac
 EMPTY_IMPLEMENTATION_GATE_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-09-lock-screen-empty-implementation-gate.md"
 EMERGENCY_INVARIANTS_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-10-lock-screen-emergency-invariants.md"
 OVERLAY_INTEGRITY_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-10-lock-screen-overlay-input-integrity.md"
+TASK_COMPONENT_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-12-lock-screen-task-component-boundaries.md"
 
 for path in \
   build.gradle \
@@ -80,6 +81,11 @@ fi
 
 if [ ! -f "$OVERLAY_INTEGRITY_PLAN_FILE" ]; then
   printf '%s\n' "Future lock-screen overlay-integrity plan is missing." >&2
+  exit 1
+fi
+
+if [ ! -f "$TASK_COMPONENT_PLAN_FILE" ]; then
+  printf '%s\n' "Future lock-screen task/component boundary plan is missing." >&2
   exit 1
 fi
 
@@ -210,6 +216,7 @@ for pattern in \
   "## Threat Model" \
   "## Credential And Biometric Boundaries" \
   "## Overlay And Input Integrity" \
+  "## Activity Task And Component Boundaries" \
   "## Accessibility Service Boundary" \
   "## Background Execution" \
   "## Emergency And System UI Invariants" \
@@ -218,6 +225,19 @@ for pattern in \
   "## Disable And Uninstall Path"; do
   if ! grep -Fq "$pattern" "$DESIGN_TEMPLATE_FILE"; then
     printf '%s\n' "Lock-screen design template is missing section: $pattern" >&2
+    exit 1
+  fi
+done
+
+for task_component_prompt in \
+  "Exported activities, services, receivers, and providers with justification" \
+  "External intent, deep-link, and PendingIntent validation" \
+  "Back, Home, Overview, and task-switching behavior" \
+  "Recents snapshot and task-preview privacy" \
+  "State restoration after configuration change or process recreation" \
+  "Manual verification for unauthorized component launches and task re-entry"; do
+  if ! grep -Fq "$task_component_prompt" "$DESIGN_TEMPLATE_FILE"; then
+    printf '%s\n' "Lock-screen design template is missing task/component prompt: $task_component_prompt" >&2
     exit 1
   fi
 done
@@ -283,6 +303,11 @@ if ! grep -Fq "overlay and input integrity boundaries" "$ROOT_DIR/README.md"; th
   exit 1
 fi
 
+if ! grep -Fq "activity/task/component boundaries" "$ROOT_DIR/README.md"; then
+  printf '%s\n' "README must require future activity/task/component boundaries." >&2
+  exit 1
+fi
+
 if ! grep -Fq "credential and biometric boundaries" "$SECURITY_FILE"; then
   printf '%s\n' "SECURITY must document future credential and biometric boundaries." >&2
   exit 1
@@ -300,6 +325,11 @@ fi
 
 if ! grep -Fq "overlay and input integrity boundaries" "$SECURITY_FILE"; then
   printf '%s\n' "SECURITY must document future overlay and input integrity boundaries." >&2
+  exit 1
+fi
+
+if ! grep -Fq "activity, task, and component boundaries" "$SECURITY_FILE"; then
+  printf '%s\n' "SECURITY must document future activity, task, and component boundaries." >&2
   exit 1
 fi
 
@@ -332,6 +362,12 @@ fi
 if ! grep -Fq "Status: Completed" "$OVERLAY_INTEGRITY_PLAN_FILE" ||
    ! grep -Fq "make check" "$OVERLAY_INTEGRITY_PLAN_FILE"; then
   printf '%s\n' "Overlay-integrity plan must record completed make check verification." >&2
+  exit 1
+fi
+
+if ! grep -Fq "Status: Completed" "$TASK_COMPONENT_PLAN_FILE" ||
+   ! grep -Fq "make check" "$TASK_COMPONENT_PLAN_FILE"; then
+  printf '%s\n' "Task/component boundary plan must record completed make check verification." >&2
   exit 1
 fi
 
