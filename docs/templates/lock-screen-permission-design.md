@@ -57,6 +57,15 @@ in `docs/plans/` with the implementation plan it supports.
 - Accessibility overlay and trusted system UI behavior:
 - Manual tapjacking and overlay-abuse verification:
 
+## Activity Task And Component Boundaries
+
+- Exported activities, services, receivers, and providers with justification:
+- External intent, deep-link, and PendingIntent validation:
+- Back, Home, Overview, and task-switching behavior:
+- Recents snapshot and task-preview privacy:
+- State restoration after configuration change or process recreation:
+- Manual verification for unauthorized component launches and task re-entry:
+
 ## Background Execution
 
 - Services, receivers, alarms, jobs, or foreground notifications:

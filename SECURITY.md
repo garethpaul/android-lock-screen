@@ -48,6 +48,10 @@ authentication, or recovery after crashes, reboot, and safe mode.
 Future plans must also define overlay and input integrity boundaries, including
 obscured-touch rejection, screen-capture behavior, accessibility overlays, and
 tapjacking verification before sensitive UI is implemented.
+Future plans must define activity, task, and component boundaries before code
+lands, including exported-component justification, external intent validation,
+system navigation behavior, recents-snapshot privacy, and safe state
+restoration after process recreation.
 
 ## Dependency and Supply Chain Security
 

@@ -38,6 +38,9 @@ Priority:
   can affect calling, alarms, authentication, reboot, or recovery paths
 - Require overlay and input integrity boundaries before sensitive lock-screen
   UI can accept touches or display authentication-adjacent content
+- Require activity, task, and component boundaries before external launches,
+  task navigation, recents previews, or recreated state can affect lock-screen
+  behavior
 - Keep a reusable security design template available before implementation
   scaffolding is added
 

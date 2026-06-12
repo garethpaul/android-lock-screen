@@ -1,5 +1,11 @@
 # Changes
 
+## 2026-06-12
+
+- Added activity, task, and component boundary prompts covering exported
+  components, external intents, system navigation, recents privacy, and state
+  restoration before future lock-screen implementation.
+
 ## 2026-06-10
 
 - Added emergency and system UI invariant prompts for future lock-screen
