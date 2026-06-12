@@ -14,6 +14,7 @@ EMPTY_IMPLEMENTATION_GATE_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-09-lock-screen
 EMERGENCY_INVARIANTS_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-10-lock-screen-emergency-invariants.md"
 OVERLAY_INTEGRITY_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-10-lock-screen-overlay-input-integrity.md"
 TASK_COMPONENT_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-12-lock-screen-task-component-boundaries.md"
+CHECKOUT_CREDENTIAL_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-12-checkout-credential-boundary.md"
 
 for path in \
   build.gradle \
@@ -86,6 +87,11 @@ fi
 
 if [ ! -f "$TASK_COMPONENT_PLAN_FILE" ]; then
   printf '%s\n' "Future lock-screen task/component boundary plan is missing." >&2
+  exit 1
+fi
+
+if [ ! -f "$CHECKOUT_CREDENTIAL_PLAN_FILE" ]; then
+  printf '%s\n' "Checkout credential boundary plan is missing." >&2
   exit 1
 fi
 
@@ -385,6 +391,55 @@ for workflow_contract in \
     exit 1
   fi
 done
+
+workflow_files=$(find "$ROOT_DIR/.github/workflows" -mindepth 1 -maxdepth 1 -type f -print | sort)
+if [ "$workflow_files" != "$CI_WORKFLOW" ]; then
+  printf '%s\n' "GitHub Actions workflow inventory must contain only check.yml." >&2
+  exit 1
+fi
+
+if ! awk '
+  function finish_step() {
+    if (checkout) {
+      checkout_count++
+      if (with_block && persist_false) {
+        secure_checkout_count++
+      }
+    }
+    checkout = 0
+    with_block = 0
+    persist_false = 0
+  }
+  /^      - / { finish_step() }
+  /^        uses: actions\/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6\.0\.3$/ { checkout = 1 }
+  checkout && /^        with:$/ { with_block = 1 }
+  checkout && with_block && /^          persist-credentials: false$/ { persist_false = 1 }
+  END {
+    finish_step()
+    exit !(checkout_count == 1 && secure_checkout_count == 1)
+  }
+' "$CI_WORKFLOW" ||
+   [ "$(grep -Fc "persist-credentials:" "$CI_WORKFLOW")" -ne 1 ] ||
+   grep -Fq "persist-credentials: true" "$CI_WORKFLOW"; then
+  printf '%s\n' "GitHub Actions must use one pinned credential-free checkout." >&2
+  exit 1
+fi
+
+if ! grep -Fq "status: completed" "$CHECKOUT_CREDENTIAL_PLAN_FILE" ||
+   ! grep -Fq "persist-credentials: false" "$CHECKOUT_CREDENTIAL_PLAN_FILE" ||
+   ! grep -Fq "hostile mutations rejected" "$CHECKOUT_CREDENTIAL_PLAN_FILE"; then
+  printf '%s\n' "Checkout credential plan must record completed verification." >&2
+  exit 1
+fi
+
+guidance=$(cat "$ROOT_DIR/README.md" "$ROOT_DIR/SECURITY.md" "$ROOT_DIR/VISION.md" "$ROOT_DIR/CHANGES.md" | tr '\n' ' ')
+case "$guidance" in
+  *"checkout credentials are not persisted"*"credential-free checkout"*) ;;
+  *)
+    printf '%s\n' "Repository guidance must document the credential-free checkout boundary." >&2
+    exit 1
+    ;;
+esac
 
 
 if ! grep -Fq 'ROOT := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))' "$ROOT_DIR/Makefile"; then

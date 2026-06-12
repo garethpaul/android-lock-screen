@@ -26,6 +26,7 @@ Priority:
   remains implementation-free
 - Keep GitHub Actions running the empty-repository `make check` baseline
   before review
+- Keep hosted source retrieval credential-free after checkout
 - Fail the empty-repository baseline if Android implementation artifacts appear
   before the baseline is replaced
 - Require a permission, consent, and device-admin design note before code lands

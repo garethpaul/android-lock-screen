@@ -29,6 +29,8 @@ Helpful reports include:
 - No primary dependency manifest was detected in the repository root. If dependencies are added later, include a manifest and prefer reproducible installation instructions.
 - Pinned, read-only GitHub Actions runs the empty-repository `make check`
   baseline before review.
+- Hosted verification uses a credential-free checkout so its read-only token is
+  not retained in the runner's Git configuration.
 
 ## Mobile Privacy Notes
 

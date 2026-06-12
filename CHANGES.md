@@ -2,6 +2,8 @@
 
 ## 2026-06-12
 
+- Disabled persisted checkout credentials and enforced the sole pinned
+  credential-free workflow boundary.
 - Added activity, task, and component boundary prompts covering exported
   components, external intents, system navigation, recents privacy, and state
   restoration before future lock-screen implementation.

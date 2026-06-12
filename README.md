@@ -54,7 +54,7 @@ Before app code is added, establish:
 GitHub Actions runs the same `make check` baseline through
 `.github/workflows/check.yml` on pushes, pull requests, and manual dispatches.
 The workflow uses immutable checkout, read-only permissions, and a five-minute
-timeout.
+timeout. Its checkout credentials are not persisted after source retrieval.
 
 Run the repository baseline check through the standard wrapper:
 
