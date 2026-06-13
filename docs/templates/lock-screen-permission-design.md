@@ -82,18 +82,27 @@ in `docs/plans/` with the implementation plan it supports.
 - Fail-safe behavior when lock-screen state cannot be determined:
 - Recovery through safe mode or platform settings:
 
-## Data Handling
+## Sensitive Data Lifecycle
 
+- Data classification for lock state, account, device, credential-adjacent,
+  biometric-adjacent, and diagnostic data:
 - Data read from the device:
-- Data stored locally:
+- Internal versus external storage locations with justification:
+- Encryption at rest and key-management boundary:
+- Cloud backup inclusion or exclusion by persisted data category:
+- Device-to-device transfer inclusion or exclusion by persisted data category:
 - Data transmitted off-device:
-- Logs, analytics, and crash-reporting boundaries:
+- Retention period and deletion triggers:
+- Cleanup on disable, sign-out, uninstall, and account removal:
+- Restore validation before recovered state can affect lock-screen behavior:
+- Production log, analytics, and crash-report redaction rules:
 
 ## Manual Verification Matrix
 
 - Fresh install:
 - Permission denial:
 - Permission revocation:
+- Cloud backup, device-transfer, and restore behavior:
 - Lock-screen entry and exit:
 - Reboot:
 - Uninstall or disable:

@@ -42,6 +42,9 @@ collect unlock credentials, or blur the line between sample UI and platform
 credential prompts without an explicit design and verification note.
 Future plans must include credential and biometric boundaries before any
 authentication-adjacent UI or behavior is added.
+Future plans must define sensitive-data lifecycle boundaries for storage,
+encryption, backup, device transfer, retention, deletion, restore validation,
+and production diagnostic redaction before any such data is handled.
 Future plans must also document accessibility-service boundaries before using
 accessibility APIs near lock-screen behavior.
 Future plans must define emergency and system UI invariants so custom behavior

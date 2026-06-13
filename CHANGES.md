@@ -1,5 +1,11 @@
 # Changes
 
+## 2026-06-13
+
+- Added sensitive-data lifecycle boundaries for classification, storage,
+  encryption, backup, device transfer, retention, deletion, restore validation,
+  and production diagnostic redaction before implementation begins.
+
 ## 2026-06-12
 
 - Disabled persisted checkout credentials and enforced the sole pinned

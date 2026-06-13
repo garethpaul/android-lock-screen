@@ -45,6 +45,8 @@
 - A build command that produces a debug APK in a configured Android SDK.
 - CI or documented local gates for formatting, tests, and build verification.
 - Ignore rules for generated Android artifacts and local SDK configuration.
+- Sensitive-data lifecycle boundaries covering storage, encryption, backup,
+  transfer, retention, deletion, restore validation, and production diagnostics.
 
 ## Agent workflow
 

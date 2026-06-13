@@ -1,6 +1,6 @@
 # Lock Screen Sensitive Data Lifecycle Boundary
 
-Status: Planned
+Status: Completed
 
 ## Priority
 
@@ -21,10 +21,11 @@ authentication-adjacent and lock-state data.
 - **R4:** Require retention, disable, sign-out, uninstall, and restore cleanup
   behavior.
 - **R5:** Require production log, analytics, and crash-report redaction rules.
-- **R6:** Preserve the empty-repository gate and every existing permission,
+- **R6:** Require manual cloud-backup, device-transfer, and restore verification.
+- **R7:** Preserve the empty-repository gate and every existing permission,
   consent, credential, accessibility, overlay, task, emergency, and recovery
   boundary.
-- **R7:** Add fail-closed checker, documentation, hostile mutation, and hosted
+- **R8:** Add fail-closed checker, documentation, hostile mutation, and hosted
   verification evidence.
 
 ## Implementation Units
@@ -70,7 +71,15 @@ backup boundaries are explicit.
 
 ## Verification
 
-Pending implementation and execution.
+- An isolated repository copy passed `make check`, covering shell syntax, the
+  SDK-free baseline through lint and test gates, and the intentionally skipped
+  build gate because no Android project exists.
+- Twelve hostile mutations were rejected: each of the nine lifecycle decision
+  prompts, the backup/transfer/restore verification prompt, an Android
+  implementation artifact, and plan-status rollback.
+- Canonical and external-directory `make check` both passed against the exact
+  completed implementation with the same shell, SDK-free lint/test, and
+  intentional no-project build-skip coverage.
 
 ## Sources
 

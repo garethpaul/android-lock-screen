@@ -15,6 +15,7 @@ EMERGENCY_INVARIANTS_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-10-lock-screen-emer
 OVERLAY_INTEGRITY_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-10-lock-screen-overlay-input-integrity.md"
 TASK_COMPONENT_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-12-lock-screen-task-component-boundaries.md"
 CHECKOUT_CREDENTIAL_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-12-checkout-credential-boundary.md"
+DATA_LIFECYCLE_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-13-lock-screen-sensitive-data-lifecycle.md"
 
 for path in \
   build.gradle \
@@ -226,11 +227,49 @@ for pattern in \
   "## Accessibility Service Boundary" \
   "## Background Execution" \
   "## Emergency And System UI Invariants" \
-  "## Data Handling" \
+  "## Sensitive Data Lifecycle" \
   "## Manual Verification Matrix" \
   "## Disable And Uninstall Path"; do
   if ! grep -Fq "$pattern" "$DESIGN_TEMPLATE_FILE"; then
     printf '%s\n' "Lock-screen design template is missing section: $pattern" >&2
+    exit 1
+  fi
+done
+
+DESIGN_TEMPLATE_NORMALIZED=$(tr '\n' ' ' < "$DESIGN_TEMPLATE_FILE" | tr -s '[:space:]' ' ')
+for data_lifecycle_prompt in \
+  "Data classification for lock state, account, device, credential-adjacent, biometric-adjacent, and diagnostic data" \
+  "Internal versus external storage locations with justification" \
+  "Encryption at rest and key-management boundary" \
+  "Cloud backup inclusion or exclusion by persisted data category" \
+  "Device-to-device transfer inclusion or exclusion by persisted data category" \
+  "Retention period and deletion triggers" \
+  "Cleanup on disable, sign-out, uninstall, and account removal" \
+  "Restore validation before recovered state can affect lock-screen behavior" \
+  "Production log, analytics, and crash-report redaction rules"; do
+  if ! printf '%s\n' "$DESIGN_TEMPLATE_NORMALIZED" | grep -Fq "$data_lifecycle_prompt"; then
+    printf '%s\n' "Lock-screen design template is missing data-lifecycle prompt: $data_lifecycle_prompt" >&2
+    exit 1
+  fi
+done
+
+if ! grep -Fq "Cloud backup, device-transfer, and restore behavior" "$DESIGN_TEMPLATE_FILE"; then
+  printf '%s\n' "Lock-screen verification matrix must cover backup, transfer, and restore behavior." >&2
+  exit 1
+fi
+
+if [ ! -f "$DATA_LIFECYCLE_PLAN_FILE" ] || \
+   ! grep -Fq "Status: Completed" "$DATA_LIFECYCLE_PLAN_FILE" || \
+   ! grep -Fq "make check" "$DATA_LIFECYCLE_PLAN_FILE" || \
+   ! grep -Fq "hostile mutations" "$DATA_LIFECYCLE_PLAN_FILE"; then
+  printf '%s\n' "Lock-screen sensitive-data lifecycle plan must record completed verification." >&2
+  exit 1
+fi
+
+for data_lifecycle_doc in "$ROOT_DIR/AGENTS.md" "$ROOT_DIR/README.md" "$SECURITY_FILE" "$ROOT_DIR/VISION.md" "$ROOT_DIR/CHANGES.md"; do
+  if ! tr '\n' ' ' < "$data_lifecycle_doc" | tr -s '[:space:]' ' ' | \
+      grep -Fiq "sensitive-data lifecycle boundaries"; then
+    printf '%s\n' "$data_lifecycle_doc must document sensitive-data lifecycle boundaries." >&2
     exit 1
   fi
 done

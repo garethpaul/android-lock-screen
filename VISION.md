@@ -42,6 +42,9 @@ Priority:
 - Require activity, task, and component boundaries before external launches,
   task navigation, recents previews, or recreated state can affect lock-screen
   behavior
+- Require sensitive-data lifecycle boundaries before lock-state, account,
+  device, or diagnostic data can be stored, backed up, transferred, restored,
+  retained, deleted, logged, or transmitted
 - Keep a reusable security design template available before implementation
   scaffolding is added
 
