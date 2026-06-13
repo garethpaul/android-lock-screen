@@ -16,6 +16,7 @@ OVERLAY_INTEGRITY_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-10-lock-screen-overlay
 TASK_COMPONENT_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-12-lock-screen-task-component-boundaries.md"
 CHECKOUT_CREDENTIAL_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-12-checkout-credential-boundary.md"
 DATA_LIFECYCLE_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-13-lock-screen-sensitive-data-lifecycle.md"
+PLATFORM_OWNERSHIP_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-13-lock-screen-platform-ownership.md"
 
 for path in \
   build.gradle \
@@ -218,6 +219,7 @@ fi
 
 for pattern in \
   "## Supported Android Versions" \
+  "## Platform Ownership And Capability" \
   "## Permission And Consent Flow" \
   "## Device Admin Or Device Owner Behavior" \
   "## Threat Model" \
@@ -232,6 +234,49 @@ for pattern in \
   "## Disable And Uninstall Path"; do
   if ! grep -Fq "$pattern" "$DESIGN_TEMPLATE_FILE"; then
     printf '%s\n' "Lock-screen design template is missing section: $pattern" >&2
+    exit 1
+  fi
+done
+
+for platform_ownership_prompt in \
+  "Selected mode: normal Activity, launcher, screen pinning, or DPC-managed lock task" \
+  "Platform APIs used and capability limits for the selected mode" \
+  "Secure Keyguard credential and biometric boundary, including any fully managed-device exception" \
+  "Device-owner or DPC enrollment and deprovisioning path, if required" \
+  "Lock-task package allowlisting and system UI feature decisions, if required" \
+  "Behavior when lock task is not permitted or ownership prerequisites are absent" \
+  "User-visible exit, fallback, and recovery path for each supported mode" \
+  "Lock-screen replacement, authentication-bypass, or device-ownership claims explicitly not made"; do
+  if ! grep -Fq "$platform_ownership_prompt" "$DESIGN_TEMPLATE_FILE"; then
+    printf '%s\n' "Lock-screen design template is missing platform-ownership prompt: $platform_ownership_prompt" >&2
+    exit 1
+  fi
+done
+
+for platform_verification_prompt in \
+  "Normal unmanaged-device mode" \
+  "Managed and lock-task-allowlisted device mode, if supported" \
+  "Unsupported or unpermitted ownership state"; do
+  if ! grep -Fq "$platform_verification_prompt" "$DESIGN_TEMPLATE_FILE"; then
+    printf '%s\n' "Lock-screen verification matrix is missing ownership case: $platform_verification_prompt" >&2
+    exit 1
+  fi
+done
+
+if [ ! -f "$PLATFORM_OWNERSHIP_PLAN_FILE" ] || \
+   ! grep -Fq "Status: Completed" "$PLATFORM_OWNERSHIP_PLAN_FILE" || \
+   ! grep -Fq "## Verification Completed" "$PLATFORM_OWNERSHIP_PLAN_FILE" || \
+   ! grep -Fq "make check" "$PLATFORM_OWNERSHIP_PLAN_FILE" || \
+   ! grep -Fq "Fourteen hostile mutations" "$PLATFORM_OWNERSHIP_PLAN_FILE" || \
+   ! grep -Fq "developer.android.com/work/dpc/dedicated-devices/lock-task-mode" "$PLATFORM_OWNERSHIP_PLAN_FILE"; then
+  printf '%s\n' "Lock-screen platform ownership plan must record completed verification and sources." >&2
+  exit 1
+fi
+
+for platform_ownership_doc in "$ROOT_DIR/AGENTS.md" "$ROOT_DIR/README.md" "$SECURITY_FILE" "$ROOT_DIR/VISION.md" "$ROOT_DIR/CHANGES.md"; do
+  if ! tr '\n' ' ' < "$platform_ownership_doc" | tr -s '[:space:]' ' ' | \
+      grep -Fiq "platform ownership and capability boundaries"; then
+    printf '%s\n' "$platform_ownership_doc must document platform ownership and capability boundaries." >&2
     exit 1
   fi
 done

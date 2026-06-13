@@ -10,6 +10,17 @@ in `docs/plans/` with the implementation plan it supports.
 - Tested Android versions and devices:
 - Platform lock-screen APIs or alternatives:
 
+## Platform Ownership And Capability
+
+- Selected mode: normal Activity, launcher, screen pinning, or DPC-managed lock task:
+- Platform APIs used and capability limits for the selected mode:
+- Secure Keyguard credential and biometric boundary, including any fully managed-device exception:
+- Device-owner or DPC enrollment and deprovisioning path, if required:
+- Lock-task package allowlisting and system UI feature decisions, if required:
+- Behavior when lock task is not permitted or ownership prerequisites are absent:
+- User-visible exit, fallback, and recovery path for each supported mode:
+- Lock-screen replacement, authentication-bypass, or device-ownership claims explicitly not made:
+
 ## Permission And Consent Flow
 
 - Permissions requested:
@@ -100,6 +111,9 @@ in `docs/plans/` with the implementation plan it supports.
 ## Manual Verification Matrix
 
 - Fresh install:
+- Normal unmanaged-device mode:
+- Managed and lock-task-allowlisted device mode, if supported:
+- Unsupported or unpermitted ownership state:
 - Permission denial:
 - Permission revocation:
 - Cloud backup, device-transfer, and restore behavior:

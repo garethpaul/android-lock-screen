@@ -45,8 +45,9 @@ Before app code is added, establish:
   device-admin or device-owner behavior, threat model, credential and
   biometric boundaries, accessibility-service boundaries, background execution,
   emergency and system UI invariants, overlay and input integrity boundaries,
-  activity/task/component boundaries, and sensitive data handling before any
-  lock-screen code is added. Sensitive-data lifecycle boundaries must cover
+  activity/task/component boundaries, platform ownership and capability
+  boundaries, and sensitive data handling before any lock-screen code is added.
+  Sensitive-data lifecycle boundaries must cover
   storage, encryption, cloud backup, device transfer, retention, deletion,
   restore validation, and production diagnostics. Use
   `docs/templates/lock-screen-permission-design.md` as the starting structure.

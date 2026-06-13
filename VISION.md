@@ -45,6 +45,8 @@ Priority:
 - Require sensitive-data lifecycle boundaries before lock-state, account,
   device, or diagnostic data can be stored, backed up, transferred, restored,
   retained, deleted, logged, or transmitted
+- Require platform ownership and capability boundaries before choosing normal
+  activity, launcher, screen-pinning, or DPC-managed lock-task behavior
 - Keep a reusable security design template available before implementation
   scaffolding is added
 

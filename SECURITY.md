@@ -57,6 +57,10 @@ Future plans must define activity, task, and component boundaries before code
 lands, including exported-component justification, external intent validation,
 system navigation behavior, recents-snapshot privacy, and safe state
 restoration after process recreation.
+Future plans must define platform ownership and capability boundaries before
+claiming lock-screen replacement, kiosk, launcher, screen-pinning, or
+device-owner behavior. Normal app modes must preserve secure system Keyguard;
+any exception must be limited to an explicitly designed fully managed device.
 
 ## Dependency and Supply Chain Security
 

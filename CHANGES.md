@@ -2,6 +2,8 @@
 
 ## 2026-06-13
 
+- Added platform ownership and capability boundaries for normal activities,
+  launchers, screen pinning, managed lock task, and secure Keyguard limits.
 - Added sensitive-data lifecycle boundaries for classification, storage,
   encryption, backup, device transfer, retention, deletion, restore validation,
   and production diagnostic redaction before implementation begins.
