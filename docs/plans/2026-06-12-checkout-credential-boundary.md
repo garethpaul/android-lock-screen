@@ -26,8 +26,10 @@ retained the workflow token in the runner's Git configuration.
   duplicate checkout action, extra workflow file, incomplete plan, stale
   documentation, and an added Android implementation artifact; all hostile
   mutations rejected.
-- Exact-head hosted verification remains pending until this successor is
-  pushed.
+- GitHub Actions pull-request run `27444549973` passed `make check` on exact
+  implementation head `c4cbd60b6a9cb18e9f68363967fb711a371f54e9`.
+- This evidence-only plan update requires one final exact-head hosted
+  revalidation after it is pushed; no unbounded wait is part of this plan.
 
 ## Boundaries
 
