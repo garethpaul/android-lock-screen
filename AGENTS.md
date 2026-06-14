@@ -49,6 +49,8 @@
   transfer, retention, deletion, restore validation, and production diagnostics.
 - Platform ownership and capability boundaries distinguishing normal activity,
   launcher, screen pinning, and DPC-managed lock-task behavior.
+- Authentication-attempt handling boundaries covering throttling, durable
+  state, concurrency, reset conditions, diagnostics, and safe recovery.
 
 ## Agent workflow
 

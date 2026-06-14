@@ -61,6 +61,9 @@ Future plans must define platform ownership and capability boundaries before
 claiming lock-screen replacement, kiosk, launcher, screen-pinning, or
 device-owner behavior. Normal app modes must preserve secure system Keyguard;
 any exception must be limited to an explicitly designed fully managed device.
+Future credential-adjacent plans must define authentication-attempt handling
+boundaries for throttling, persistence, monotonic time, concurrency, reset
+conditions, diagnostic redaction, and non-destructive recovery.
 
 ## Dependency and Supply Chain Security
 

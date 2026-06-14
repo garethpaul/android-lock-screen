@@ -17,6 +17,7 @@ TASK_COMPONENT_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-12-lock-screen-task-compo
 CHECKOUT_CREDENTIAL_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-12-checkout-credential-boundary.md"
 DATA_LIFECYCLE_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-13-lock-screen-sensitive-data-lifecycle.md"
 PLATFORM_OWNERSHIP_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-13-lock-screen-platform-ownership.md"
+AUTH_ATTEMPT_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-14-lock-screen-authentication-attempt-boundary.md"
 
 for path in \
   build.gradle \
@@ -354,6 +355,56 @@ for emergency_prompt in \
   "Recovery through safe mode or platform settings"; do
   if ! grep -Fq "$emergency_prompt" "$DESIGN_TEMPLATE_FILE"; then
     printf '%s\n' "Lock-screen design template is missing invariant: $emergency_prompt" >&2
+    exit 1
+  fi
+done
+
+if [ "$(grep -Fc "## Authentication Attempt Handling" "$DESIGN_TEMPLATE_FILE" || true)" -ne 1 ]; then
+  printf '%s\n' "Lock-screen design template must keep one authentication-attempt section." >&2
+  exit 1
+fi
+
+for auth_attempt_prompt in \
+  "Platform-delegated authentication versus app-observed secret or attempt data" \
+  "Attempt accounting scope across user, account, device, process, and credential type" \
+  "Progressive delay, throttling, or lockout policy and maximum attempt rate" \
+  "Persistence across process death, reboot, app update, and device-owner transitions" \
+  "Monotonic-time source and behavior after wall-clock or timezone changes" \
+  "Serialization of concurrent UI, component, automation, and restored-state attempts" \
+  "Successful-authentication, administrator, enrollment, and recovery reset conditions" \
+  "Failure messaging and production diagnostics without credential, account, attempt, or timing disclosure" \
+  "User-visible non-destructive recovery that preserves emergency and system authentication access"; do
+  if ! grep -Fq "$auth_attempt_prompt" "$DESIGN_TEMPLATE_FILE"; then
+    printf '%s\n' "Lock-screen design template is missing authentication-attempt prompt: $auth_attempt_prompt" >&2
+    exit 1
+  fi
+done
+
+for auth_attempt_verification in \
+  "Rapid repeated authentication failures and maximum attempt rate" \
+  "Authentication attempt state after process death and reboot" \
+  "Authentication attempt state after wall-clock and timezone changes" \
+  "Concurrent attempts from UI, exported components, automation, and restored state" \
+  "Successful authentication and authorized reset of attempt state" \
+  "Non-destructive recovery while emergency and system authentication remain available"; do
+  if ! grep -Fq "$auth_attempt_verification" "$DESIGN_TEMPLATE_FILE"; then
+    printf '%s\n' "Lock-screen verification matrix is missing authentication-attempt case: $auth_attempt_verification" >&2
+    exit 1
+  fi
+done
+
+if [ ! -f "$AUTH_ATTEMPT_PLAN_FILE" ] || \
+   ! grep -Fq "Status: Completed" "$AUTH_ATTEMPT_PLAN_FILE" || \
+   ! grep -Fq "make check" "$AUTH_ATTEMPT_PLAN_FILE" || \
+   ! grep -Fq "hostile mutations" "$AUTH_ATTEMPT_PLAN_FILE"; then
+  printf '%s\n' "Lock-screen authentication-attempt plan must record completed verification." >&2
+  exit 1
+fi
+
+for auth_attempt_doc in "$ROOT_DIR/AGENTS.md" "$ROOT_DIR/README.md" "$SECURITY_FILE" "$ROOT_DIR/VISION.md" "$ROOT_DIR/CHANGES.md"; do
+  if ! tr '\n' ' ' < "$auth_attempt_doc" | tr -s '[:space:]' ' ' | \
+      grep -Fiq "authentication-attempt handling boundaries"; then
+    printf '%s\n' "$auth_attempt_doc must document authentication-attempt handling boundaries." >&2
     exit 1
   fi
 done

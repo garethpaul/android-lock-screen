@@ -1,6 +1,6 @@
 # Lock-Screen Authentication Attempt Boundary
 
-Status: Planned
+Status: Completed
 
 ## Context
 
@@ -66,8 +66,11 @@ credential-adjacent implementation lands.
 
 ## Verification
 
-- Run the focused checker and full `make check` from the repository and an
-  external working directory.
-- Run mutation-sensitive checks for prompts, verification cases, guidance, and
-  completed-plan status.
-- Audit exact paths, whitespace, artifacts, and credential-shaped additions.
+- The focused checker and full `make check` passed from the repository and an
+  external working directory. The guarded build target truthfully skipped
+  because no Android project is checked in.
+- Nine hostile mutations were rejected: section removal, throttling, reboot
+  persistence, monotonic time, concurrency verification, recovery verification,
+  security guidance, completed-plan status, and the empty-implementation gate.
+- Final verification includes exact-path, whitespace, artifact,
+  conflict-marker, and credential-shaped added-line audits.

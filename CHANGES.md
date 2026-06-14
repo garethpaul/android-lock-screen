@@ -1,5 +1,11 @@
 # Changes
 
+## 2026-06-14
+
+- Added authentication-attempt handling boundaries for throttling, durable
+  state, monotonic time, concurrency, reset conditions, diagnostics, recovery,
+  and manual verification before credential-adjacent implementation.
+
 ## 2026-06-13
 
 - Added platform ownership and capability boundaries for normal activities,

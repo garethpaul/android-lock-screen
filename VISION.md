@@ -33,6 +33,8 @@ Priority:
 - Require a threat model before any sensitive lock-screen behavior lands
 - Require credential and biometric boundaries before authentication-adjacent
   behavior lands
+- Require authentication-attempt handling boundaries before any app-observed
+  credential or authentication failure can affect access or recovery
 - Require accessibility-service boundaries before accessibility-mediated
   lock-screen behavior lands
 - Require emergency and system UI invariants before custom lock-screen behavior

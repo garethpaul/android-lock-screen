@@ -46,7 +46,8 @@ Before app code is added, establish:
   biometric boundaries, accessibility-service boundaries, background execution,
   emergency and system UI invariants, overlay and input integrity boundaries,
   activity/task/component boundaries, platform ownership and capability
-  boundaries, and sensitive data handling before any lock-screen code is added.
+  boundaries, authentication-attempt handling boundaries, and sensitive data
+  handling before any lock-screen code is added.
   Sensitive-data lifecycle boundaries must cover
   storage, encryption, cloud backup, device transfer, retention, deletion,
   restore validation, and production diagnostics. Use
@@ -99,6 +100,9 @@ Android versions. Start from
 rollback questions are answered consistently.
 The design note must include credential and biometric boundaries before any
 authentication-adjacent UI or behavior is added.
+Authentication-attempt handling boundaries must define throttling, durable
+attempt state, time semantics, concurrent attempts, reset conditions,
+diagnostic redaction, and non-destructive recovery.
 It must also define sensitive-data lifecycle boundaries before any lock-state,
 account, device, or diagnostic data is persisted or transmitted.
 

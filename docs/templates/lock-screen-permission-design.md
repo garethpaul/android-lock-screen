@@ -59,6 +59,18 @@ in `docs/plans/` with the implementation plan it supports.
 - Boundaries that prevent spoofing system authentication:
 - User-visible recovery if unlock or authentication state changes:
 
+## Authentication Attempt Handling
+
+- Platform-delegated authentication versus app-observed secret or attempt data:
+- Attempt accounting scope across user, account, device, process, and credential type:
+- Progressive delay, throttling, or lockout policy and maximum attempt rate:
+- Persistence across process death, reboot, app update, and device-owner transitions:
+- Monotonic-time source and behavior after wall-clock or timezone changes:
+- Serialization of concurrent UI, component, automation, and restored-state attempts:
+- Successful-authentication, administrator, enrollment, and recovery reset conditions:
+- Failure messaging and production diagnostics without credential, account, attempt, or timing disclosure:
+- User-visible non-destructive recovery that preserves emergency and system authentication access:
+
 ## Overlay And Input Integrity
 
 - Overlay or draw-over-other-apps permissions requested:
@@ -117,6 +129,12 @@ in `docs/plans/` with the implementation plan it supports.
 - Permission denial:
 - Permission revocation:
 - Cloud backup, device-transfer, and restore behavior:
+- Rapid repeated authentication failures and maximum attempt rate:
+- Authentication attempt state after process death and reboot:
+- Authentication attempt state after wall-clock and timezone changes:
+- Concurrent attempts from UI, exported components, automation, and restored state:
+- Successful authentication and authorized reset of attempt state:
+- Non-destructive recovery while emergency and system authentication remain available:
 - Lock-screen entry and exit:
 - Reboot:
 - Uninstall or disable:
