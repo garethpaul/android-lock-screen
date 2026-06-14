@@ -526,8 +526,30 @@ case "$guidance" in
 esac
 
 
-if ! grep -Fq 'ROOT := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))' "$ROOT_DIR/Makefile"; then
-  printf '%s\n' "Makefile must resolve repository paths from its own location." >&2
+if ! grep -Fxq 'override ROOT := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))' "$ROOT_DIR/Makefile"; then
+  printf '%s\n' "Makefile must protect repository paths from command-line overrides." >&2
+  exit 1
+fi
+
+if [ "$(grep -Fc '$(ROOT)scripts/check-baseline.sh' "$ROOT_DIR/Makefile")" -ne 3 ]; then
+  printf '%s\n' "All three SDK-free baseline commands must use the protected root." >&2
+  exit 1
+fi
+
+if ! grep -Fxq 'verify: lint test build' "$ROOT_DIR/Makefile" || \
+   ! grep -Fxq 'check: verify' "$ROOT_DIR/Makefile"; then
+  printf '%s\n' "Makefile must preserve lint, test, build, verify, and check ordering." >&2
+  exit 1
+fi
+
+make_tab=$(printf '\t')
+if ! grep -Fxq "${make_tab}@echo \"No Android project is checked in yet; build skipped.\"" "$ROOT_DIR/Makefile"; then
+  printf '%s\n' "Makefile must preserve the explicit empty-project build skip." >&2
+  exit 1
+fi
+
+if ! grep -Fxq "Status: Completed" "$ROOT_DIR/docs/plans/2026-06-14-lock-screen-make-root-override-protection.md"; then
+  printf '%s\n' "Lock-screen Make root protection plan must record completed status." >&2
   exit 1
 fi
 

@@ -1,6 +1,6 @@
 # Lock-Screen Make Root Override Protection
 
-Status: Planned
+Status: Completed
 
 ## Problem
 
@@ -35,3 +35,25 @@ checkout.
 - Do not change permission-design, platform-ownership, sensitive-data, or
   security boundaries.
 - Do not merge or close any pull request without explicit owner authorization.
+
+## Work Completed
+
+- Protected the Makefile-derived root while preserving every target and the
+  explicit empty-project build skip.
+- Added dependency-free contracts for the protected root, all three rooted
+  baseline invocations, target ordering, build message, and completed plan.
+
+## Verification Results
+
+- The focused baseline checker and shell syntax checks passed.
+- Local, external-directory, and hostile command-line `ROOT` `make check`
+  gates each passed both baseline executions and the explicit empty-project
+  build skip while remaining anchored to this checkout.
+- All ten focused mutations were rejected: missing `override`, `CURDIR`,
+  recursive root assignment, `firstword`, one unrooted baseline, one removed
+  baseline, reordered verification, bypassed verification, changed build
+  message, and reopened plan status.
+- Workflow YAML, SVG XML, shell syntax, conflict-marker, whitespace,
+  ignored-artifact, exact-diff, and changed-line credential audits passed.
+- Android and Gradle scaffolding remained absent; only the three intended
+  files changed and no generated artifacts remained.
