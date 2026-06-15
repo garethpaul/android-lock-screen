@@ -35,6 +35,8 @@ Priority:
   behavior lands
 - Require authentication-attempt handling boundaries before any app-observed
   credential or authentication failure can affect access or recovery
+- Require background-execution and direct-boot lifecycle boundaries before any
+  component can run while locked, at boot, after process death, or after disable
 - Require accessibility-service boundaries before accessibility-mediated
   lock-screen behavior lands
 - Require emergency and system UI invariants before custom lock-screen behavior

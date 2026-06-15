@@ -51,6 +51,8 @@
   launcher, screen pinning, and DPC-managed lock-task behavior.
 - Authentication-attempt handling boundaries covering throttling, durable
   state, concurrency, reset conditions, diagnostics, and safe recovery.
+- Background-execution and direct-boot lifecycle boundaries covering component
+  triggers, storage availability, visible foreground work, restart, and disable.
 
 ## Agent workflow
 

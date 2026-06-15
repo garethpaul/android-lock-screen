@@ -64,6 +64,10 @@ any exception must be limited to an explicitly designed fully managed device.
 Future credential-adjacent plans must define authentication-attempt handling
 boundaries for throttling, persistence, monotonic time, concurrency, reset
 conditions, diagnostic redaction, and non-destructive recovery.
+Future plans must define background-execution and direct-boot lifecycle
+boundaries before adding services, receivers, alarms, jobs, or workers,
+including storage availability, foreground disclosure, cancellation, restart,
+force-stop, permission revocation, ownership loss, and feature disable.
 
 ## Dependency and Supply Chain Security
 

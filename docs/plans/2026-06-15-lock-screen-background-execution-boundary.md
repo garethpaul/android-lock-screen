@@ -1,6 +1,6 @@
 # Lock-Screen Background Execution Boundary
 
-Status: Planned
+Status: Completed
 
 ## Context
 
@@ -72,12 +72,16 @@ designed before future components land.
   invariants.
 - Keep this work stacked on the authentication-attempt boundary pull request.
 
-## Verification To Complete
+## Completed Verification
 
-- Run the focused checker and repository/external-directory `make check`.
-- Reject isolated hostile mutations for every new lifecycle category,
-  verification evidence, guidance, plan status, and empty-implementation gate.
-- Run exact diff, artifact, conflict-marker, likely-secret, and whitespace
-  audits.
-- Take one bounded exact-head hosted snapshot after push without polling.
-
+- The focused SDK-free checker and repository/external-directory `make check`
+  passed; the guarded build truthfully skipped because no Android project is
+  checked in.
+- Twelve isolated hostile mutations were rejected across component inventory,
+  direct-boot storage, foreground disclosure, restart, scheduling, fail-safe,
+  locked-boot verification, force-stop/disable verification, guidance, plan
+  status, and the empty-implementation gate.
+- Exact diff, generated-artifact, conflict-marker, likely-secret, and whitespace
+  audits passed for the intended files.
+- Hosted evidence is recorded separately from one bounded exact-head snapshot
+  after push; no Android runtime behavior is claimed by this design-only plan.

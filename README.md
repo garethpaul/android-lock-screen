@@ -43,7 +43,8 @@ Before app code is added, establish:
   source directories, or app scaffolding.
 - A permission and consent design note that covers Android version support,
   device-admin or device-owner behavior, threat model, credential and
-  biometric boundaries, accessibility-service boundaries, background execution,
+  biometric boundaries, accessibility-service boundaries,
+  background-execution and direct-boot lifecycle boundaries,
   emergency and system UI invariants, overlay and input integrity boundaries,
   activity/task/component boundaries, platform ownership and capability
   boundaries, authentication-attempt handling boundaries, and sensitive data
@@ -105,6 +106,9 @@ attempt state, time semantics, concurrent attempts, reset conditions,
 diagnostic redaction, and non-destructive recovery.
 It must also define sensitive-data lifecycle boundaries before any lock-state,
 account, device, or diagnostic data is persisted or transmitted.
+Future background components must document direct-boot storage, foreground
+disclosure, restart and cancellation rules, denied startup, and a disable path
+that cannot silently resurrect the feature.
 
 ## Change Log
 

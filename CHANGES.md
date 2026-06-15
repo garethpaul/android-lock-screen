@@ -1,5 +1,11 @@
 # Changes
 
+## 2026-06-15
+
+- Added background-execution and direct-boot lifecycle boundaries for component
+  ownership, storage availability, foreground disclosure, scheduling, restart,
+  cancellation, force-stop, permission loss, and feature disable.
+
 ## 2026-06-14
 
 - Added authentication-attempt handling boundaries for throttling, durable

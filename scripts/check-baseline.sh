@@ -18,6 +18,7 @@ CHECKOUT_CREDENTIAL_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-12-checkout-credenti
 DATA_LIFECYCLE_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-13-lock-screen-sensitive-data-lifecycle.md"
 PLATFORM_OWNERSHIP_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-13-lock-screen-platform-ownership.md"
 AUTH_ATTEMPT_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-14-lock-screen-authentication-attempt-boundary.md"
+BACKGROUND_EXECUTION_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-15-lock-screen-background-execution-boundary.md"
 
 for path in \
   build.gradle \
@@ -183,7 +184,7 @@ if ! grep -Fq "device-admin or device-owner behavior" "$ROOT_DIR/README.md"; the
   exit 1
 fi
 
-if ! grep -Fq "background execution" "$ROOT_DIR/README.md"; then
+if ! grep -Eq "background[- ]execution" "$ROOT_DIR/README.md"; then
   printf '%s\n' "README must call out future background execution behavior." >&2
   exit 1
 fi
@@ -405,6 +406,56 @@ for auth_attempt_doc in "$ROOT_DIR/AGENTS.md" "$ROOT_DIR/README.md" "$SECURITY_F
   if ! tr '\n' ' ' < "$auth_attempt_doc" | tr -s '[:space:]' ' ' | \
       grep -Fiq "authentication-attempt handling boundaries"; then
     printf '%s\n' "$auth_attempt_doc must document authentication-attempt handling boundaries." >&2
+    exit 1
+  fi
+done
+
+if [ "$(grep -Fc "## Background Execution" "$DESIGN_TEMPLATE_FILE")" -ne 1 ]; then
+  printf '%s\n' "Lock-screen design template must keep one background-execution section." >&2
+  exit 1
+fi
+
+for background_prompt in \
+  "Inventory of every service, receiver, alarm, job, and worker with trigger" \
+  "exported state, permission boundary, lifetime, and cancellation path" \
+  "Direct-boot behavior and separation of device-protected from" \
+  "credential-protected storage until user unlock" \
+  "Foreground-service type, user-visible notification, user stop path" \
+  "behavior when foreground execution cannot start" \
+  "Restart policy after process death, task removal, force-stop, reboot, package" \
+  "permission revocation, ownership loss, and feature disable" \
+  "Doze, app standby, battery, scheduling, duplicate-work, retry, and backoff" \
+  "Fail-safe behavior when background work is delayed, denied, duplicated, or"; do
+  if ! grep -Fq "$background_prompt" "$DESIGN_TEMPLATE_FILE"; then
+    printf '%s\n' "Lock-screen design template is missing background-execution prompt: $background_prompt" >&2
+    exit 1
+  fi
+done
+
+for background_verification in \
+  "Locked boot before user unlock and credential-protected data availability" \
+  "Foreground-service disclosure, user stop, and denied-start behavior" \
+  "Process death, task removal, force-stop, reboot, and package update" \
+  "Feature disable, permission revocation, and ownership loss without hidden restart" \
+  "Doze, standby, duplicate scheduling, retry, and delayed-work behavior"; do
+  if ! grep -Fq "$background_verification" "$DESIGN_TEMPLATE_FILE"; then
+    printf '%s\n' "Lock-screen verification matrix is missing background-execution case: $background_verification" >&2
+    exit 1
+  fi
+done
+
+if [ ! -f "$BACKGROUND_EXECUTION_PLAN_FILE" ] || \
+   ! grep -Fq "Status: Completed" "$BACKGROUND_EXECUTION_PLAN_FILE" || \
+   ! grep -Fq "make check" "$BACKGROUND_EXECUTION_PLAN_FILE" || \
+   ! grep -Fq "hostile mutations" "$BACKGROUND_EXECUTION_PLAN_FILE"; then
+  printf '%s\n' "Lock-screen background-execution plan must record completed verification." >&2
+  exit 1
+fi
+
+for background_doc in "$ROOT_DIR/AGENTS.md" "$ROOT_DIR/README.md" "$SECURITY_FILE" "$ROOT_DIR/VISION.md" "$ROOT_DIR/CHANGES.md"; do
+  if ! tr '\n' ' ' < "$background_doc" | tr -s '[:space:]' ' ' | \
+      grep -Fiq "background-execution and direct-boot lifecycle boundaries"; then
+    printf '%s\n' "$background_doc must document background-execution and direct-boot lifecycle boundaries." >&2
     exit 1
   fi
 done

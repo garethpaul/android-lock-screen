@@ -91,10 +91,18 @@ in `docs/plans/` with the implementation plan it supports.
 
 ## Background Execution
 
-- Services, receivers, alarms, jobs, or foreground notifications:
-- Behavior while the device is locked:
-- Battery and lifecycle constraints:
-- Expected behavior after reboot:
+- Inventory of every service, receiver, alarm, job, and worker with trigger,
+  exported state, permission boundary, lifetime, and cancellation path:
+- Direct-boot behavior and separation of device-protected from
+  credential-protected storage until user unlock:
+- Foreground-service type, user-visible notification, user stop path, and
+  behavior when foreground execution cannot start:
+- Restart policy after process death, task removal, force-stop, reboot, package
+  update, permission revocation, ownership loss, and feature disable:
+- Doze, app standby, battery, scheduling, duplicate-work, retry, and backoff
+  boundaries:
+- Fail-safe behavior when background work is delayed, denied, duplicated, or
+  restored from stale state:
 
 ## Emergency And System UI Invariants
 
@@ -135,6 +143,11 @@ in `docs/plans/` with the implementation plan it supports.
 - Concurrent attempts from UI, exported components, automation, and restored state:
 - Successful authentication and authorized reset of attempt state:
 - Non-destructive recovery while emergency and system authentication remain available:
+- Locked boot before user unlock and credential-protected data availability:
+- Foreground-service disclosure, user stop, and denied-start behavior:
+- Process death, task removal, force-stop, reboot, and package update:
+- Feature disable, permission revocation, and ownership loss without hidden restart:
+- Doze, standby, duplicate scheduling, retry, and delayed-work behavior:
 - Lock-screen entry and exit:
 - Reboot:
 - Uninstall or disable:
