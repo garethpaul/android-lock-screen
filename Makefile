@@ -7,7 +7,7 @@ lint:
 	$(ROOT)scripts/check-baseline.sh
 
 test:
-	$(ROOT)scripts/check-baseline.sh
+	$(ROOT)tests/check-baseline-tests.sh
 
 build:
 	@echo "No Android project is checked in yet; build skipped."

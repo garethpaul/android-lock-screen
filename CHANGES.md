@@ -1,5 +1,12 @@
 # Changes
 
+## 2026-06-19
+
+- Hardened the empty-repository gate against Kotlin DSL, nested manifests,
+  Android source, and Gradle wrapper artifacts.
+- Added isolated hostile mutation tests for implementation and CI privilege
+  bypasses, including write scopes and explicit checkout tokens.
+
 ## 2026-06-15
 
 - Added background-execution and direct-boot lifecycle boundaries for component

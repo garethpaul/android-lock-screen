@@ -20,19 +20,32 @@ PLATFORM_OWNERSHIP_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-13-lock-screen-platfo
 AUTH_ATTEMPT_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-14-lock-screen-authentication-attempt-boundary.md"
 BACKGROUND_EXECUTION_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-15-lock-screen-background-execution-boundary.md"
 
-for path in \
-  build.gradle \
-  settings.gradle \
-  gradlew \
-  gradlew.bat \
-  app \
-  Application \
-  src; do
-  if [ -e "$ROOT_DIR/$path" ]; then
-    printf '%s\n' "Empty repository baseline must be replaced before adding Android implementation artifacts: $path" >&2
-    exit 1
-  fi
-done
+implementation_artifact=$(find "$ROOT_DIR" \
+  \( -path "$ROOT_DIR/.git" -o -path "$ROOT_DIR/.git/*" \) -prune -o \
+  \( \
+    -type d \( -name app -o -name Application -o -name gradle -o -name src \) -o \
+    \( -type f -o -type l \) \( \
+      -name AndroidManifest.xml -o \
+      -name build.gradle -o \
+      -name build.gradle.kts -o \
+      -name settings.gradle -o \
+      -name settings.gradle.kts -o \
+      -name gradlew -o \
+      -name gradlew.bat -o \
+      -name gradle-wrapper.jar -o \
+      -name gradle-wrapper.properties -o \
+      -name libs.versions.toml -o \
+      -name '*.aidl' -o \
+      -name '*.java' -o \
+      -name '*.kt' \
+    \) \
+  \) -print | head -n 1)
+
+if [ -n "$implementation_artifact" ]; then
+  artifact_path=${implementation_artifact#"$ROOT_DIR"/}
+  printf '%s\n' "Empty repository baseline must be replaced before adding Android implementation artifacts: $artifact_path" >&2
+  exit 1
+fi
 
 if [ ! -f "$ROOT_DIR/README.md" ]; then
   printf '%s\n' "README.md is required for the empty repository baseline." >&2
@@ -611,6 +624,36 @@ if ! awk '
   exit 1
 fi
 
+if [ "$(grep -Ec '^[[:space:]]*permissions:' "$CI_WORKFLOW")" -ne 1 ] || ! awk '
+  /^permissions:$/ {
+    permissions_blocks++
+    in_permissions = 1
+    next
+  }
+  in_permissions && /^[^[:space:]]/ {
+    in_permissions = 0
+  }
+  in_permissions && /^  contents: read$/ {
+    contents_read++
+    next
+  }
+  in_permissions && /^  [[:alnum:]_-]+:/ {
+    unexpected_permission = 1
+  }
+  END {
+    exit !(permissions_blocks == 1 && contents_read == 1 && !unexpected_permission)
+  }
+' "$CI_WORKFLOW"; then
+  printf '%s\n' "GitHub Actions permissions must contain only contents: read." >&2
+  exit 1
+fi
+
+if grep -Eq '^[[:space:]]+token:' "$CI_WORKFLOW" || \
+   grep -Fq '${{ secrets.' "$CI_WORKFLOW"; then
+  printf '%s\n' "GitHub Actions checkout must not receive an explicit token or repository secret." >&2
+  exit 1
+fi
+
 if ! grep -Fq "status: completed" "$CHECKOUT_CREDENTIAL_PLAN_FILE" ||
    ! grep -Fq "persist-credentials: false" "$CHECKOUT_CREDENTIAL_PLAN_FILE" ||
    ! grep -Fq "hostile mutations rejected" "$CHECKOUT_CREDENTIAL_PLAN_FILE"; then
@@ -633,8 +676,14 @@ if ! grep -Fxq 'override ROOT := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))'
   exit 1
 fi
 
-if [ "$(grep -Fc '$(ROOT)scripts/check-baseline.sh' "$ROOT_DIR/Makefile")" -ne 3 ]; then
-  printf '%s\n' "All three SDK-free baseline commands must use the protected root." >&2
+if [ "$(grep -Fc '$(ROOT)scripts/check-baseline.sh' "$ROOT_DIR/Makefile")" -ne 2 ]; then
+  printf '%s\n' "Both SDK-free baseline commands must use the protected root." >&2
+  exit 1
+fi
+
+make_tab=$(printf '\t')
+if ! grep -Fxq "${make_tab}\$(ROOT)tests/check-baseline-tests.sh" "$ROOT_DIR/Makefile"; then
+  printf '%s\n' "Makefile test must run hostile baseline regression tests." >&2
   exit 1
 fi
 
@@ -644,7 +693,6 @@ if ! grep -Fxq 'verify: lint test build' "$ROOT_DIR/Makefile" || \
   exit 1
 fi
 
-make_tab=$(printf '\t')
 if ! grep -Fxq "${make_tab}@echo \"No Android project is checked in yet; build skipped.\"" "$ROOT_DIR/Makefile"; then
   printf '%s\n' "Makefile must preserve the explicit empty-project build skip." >&2
   exit 1

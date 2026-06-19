@@ -86,7 +86,9 @@ scripts/check-baseline.sh
 
 This check does not require an Android SDK because there is no Android project
 to build yet. It also fails if Android implementation artifacts appear before
-the empty-repository baseline is replaced.
+the empty-repository baseline is replaced. The test target runs isolated
+hostile mutations that verify modern and nested Android/Gradle artifacts,
+workflow write permissions, and explicit checkout tokens are rejected.
 
 ## Security Baseline
 
