@@ -3,6 +3,11 @@
 <!-- README-OVERVIEW-IMAGE -->
 ![Project overview](docs/readme-overview.svg)
 
+## Device Preview
+
+<!-- DEVICE-PREVIEW-IMAGE -->
+![Device preview](docs/device-preview.svg)
+
 ## Overview
 
 `garethpaul/android-lock-screen` is currently an empty placeholder for an
@@ -38,10 +43,15 @@ Before app code is added, establish:
   source directories, or app scaffolding.
 - A permission and consent design note that covers Android version support,
   device-admin or device-owner behavior, threat model, credential and
-  biometric boundaries, accessibility-service boundaries, background execution,
+  biometric boundaries, accessibility-service boundaries,
+  background-execution and direct-boot lifecycle boundaries,
   emergency and system UI invariants, overlay and input integrity boundaries,
-  activity/task/component boundaries, and sensitive data handling before any
-  lock-screen code is added. Use
+  activity/task/component boundaries, platform ownership and capability
+  boundaries, authentication-attempt handling boundaries, and sensitive data
+  handling before any lock-screen code is added.
+  Sensitive-data lifecycle boundaries must cover
+  storage, encryption, cloud backup, device transfer, retention, deletion,
+  restore validation, and production diagnostics. Use
   `docs/templates/lock-screen-permission-design.md` as the starting structure.
 
 ## Verify
@@ -49,7 +59,7 @@ Before app code is added, establish:
 GitHub Actions runs the same `make check` baseline through
 `.github/workflows/check.yml` on pushes, pull requests, and manual dispatches.
 The workflow uses immutable checkout, read-only permissions, and a five-minute
-timeout.
+timeout. Its checkout credentials are not persisted after source retrieval.
 
 Run the repository baseline check through the standard wrapper:
 
@@ -76,7 +86,9 @@ scripts/check-baseline.sh
 
 This check does not require an Android SDK because there is no Android project
 to build yet. It also fails if Android implementation artifacts appear before
-the empty-repository baseline is replaced.
+the empty-repository baseline is replaced. The test target runs isolated
+hostile mutations that verify modern and nested Android/Gradle artifacts,
+workflow write permissions, and explicit checkout tokens are rejected.
 
 ## Security Baseline
 
@@ -91,6 +103,14 @@ Android versions. Start from
 rollback questions are answered consistently.
 The design note must include credential and biometric boundaries before any
 authentication-adjacent UI or behavior is added.
+Authentication-attempt handling boundaries must define throttling, durable
+attempt state, time semantics, concurrent attempts, reset conditions,
+diagnostic redaction, and non-destructive recovery.
+It must also define sensitive-data lifecycle boundaries before any lock-state,
+account, device, or diagnostic data is persisted or transmitted.
+Future background components must document direct-boot storage, foreground
+disclosure, restart and cancellation rules, denied startup, and a disable path
+that cannot silently resurrect the feature.
 
 ## Change Log
 

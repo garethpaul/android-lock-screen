@@ -29,6 +29,8 @@ Helpful reports include:
 - No primary dependency manifest was detected in the repository root. If dependencies are added later, include a manifest and prefer reproducible installation instructions.
 - Pinned, read-only GitHub Actions runs the empty-repository `make check`
   baseline before review.
+- Hosted verification uses a credential-free checkout so its read-only token is
+  not retained in the runner's Git configuration.
 
 ## Mobile Privacy Notes
 
@@ -40,6 +42,9 @@ collect unlock credentials, or blur the line between sample UI and platform
 credential prompts without an explicit design and verification note.
 Future plans must include credential and biometric boundaries before any
 authentication-adjacent UI or behavior is added.
+Future plans must define sensitive-data lifecycle boundaries for storage,
+encryption, backup, device transfer, retention, deletion, restore validation,
+and production diagnostic redaction before any such data is handled.
 Future plans must also document accessibility-service boundaries before using
 accessibility APIs near lock-screen behavior.
 Future plans must define emergency and system UI invariants so custom behavior
@@ -52,6 +57,17 @@ Future plans must define activity, task, and component boundaries before code
 lands, including exported-component justification, external intent validation,
 system navigation behavior, recents-snapshot privacy, and safe state
 restoration after process recreation.
+Future plans must define platform ownership and capability boundaries before
+claiming lock-screen replacement, kiosk, launcher, screen-pinning, or
+device-owner behavior. Normal app modes must preserve secure system Keyguard;
+any exception must be limited to an explicitly designed fully managed device.
+Future credential-adjacent plans must define authentication-attempt handling
+boundaries for throttling, persistence, monotonic time, concurrency, reset
+conditions, diagnostic redaction, and non-destructive recovery.
+Future plans must define background-execution and direct-boot lifecycle
+boundaries before adding services, receivers, alarms, jobs, or workers,
+including storage availability, foreground disclosure, cancellation, restart,
+force-stop, permission revocation, ownership loss, and feature disable.
 
 ## Dependency and Supply Chain Security
 

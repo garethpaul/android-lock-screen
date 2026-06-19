@@ -26,12 +26,17 @@ Priority:
   remains implementation-free
 - Keep GitHub Actions running the empty-repository `make check` baseline
   before review
+- Keep hosted source retrieval credential-free after checkout
 - Fail the empty-repository baseline if Android implementation artifacts appear
   before the baseline is replaced
 - Require a permission, consent, and device-admin design note before code lands
 - Require a threat model before any sensitive lock-screen behavior lands
 - Require credential and biometric boundaries before authentication-adjacent
   behavior lands
+- Require authentication-attempt handling boundaries before any app-observed
+  credential or authentication failure can affect access or recovery
+- Require background-execution and direct-boot lifecycle boundaries before any
+  component can run while locked, at boot, after process death, or after disable
 - Require accessibility-service boundaries before accessibility-mediated
   lock-screen behavior lands
 - Require emergency and system UI invariants before custom lock-screen behavior
@@ -41,6 +46,11 @@ Priority:
 - Require activity, task, and component boundaries before external launches,
   task navigation, recents previews, or recreated state can affect lock-screen
   behavior
+- Require sensitive-data lifecycle boundaries before lock-state, account,
+  device, or diagnostic data can be stored, backed up, transferred, restored,
+  retained, deleted, logged, or transmitted
+- Require platform ownership and capability boundaries before choosing normal
+  activity, launcher, screen-pinning, or DPC-managed lock-task behavior
 - Keep a reusable security design template available before implementation
   scaffolding is added
 

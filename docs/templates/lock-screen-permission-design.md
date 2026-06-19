@@ -10,6 +10,17 @@ in `docs/plans/` with the implementation plan it supports.
 - Tested Android versions and devices:
 - Platform lock-screen APIs or alternatives:
 
+## Platform Ownership And Capability
+
+- Selected mode: normal Activity, launcher, screen pinning, or DPC-managed lock task:
+- Platform APIs used and capability limits for the selected mode:
+- Secure Keyguard credential and biometric boundary, including any fully managed-device exception:
+- Device-owner or DPC enrollment and deprovisioning path, if required:
+- Lock-task package allowlisting and system UI feature decisions, if required:
+- Behavior when lock task is not permitted or ownership prerequisites are absent:
+- User-visible exit, fallback, and recovery path for each supported mode:
+- Lock-screen replacement, authentication-bypass, or device-ownership claims explicitly not made:
+
 ## Permission And Consent Flow
 
 - Permissions requested:
@@ -48,6 +59,18 @@ in `docs/plans/` with the implementation plan it supports.
 - Boundaries that prevent spoofing system authentication:
 - User-visible recovery if unlock or authentication state changes:
 
+## Authentication Attempt Handling
+
+- Platform-delegated authentication versus app-observed secret or attempt data:
+- Attempt accounting scope across user, account, device, process, and credential type:
+- Progressive delay, throttling, or lockout policy and maximum attempt rate:
+- Persistence across process death, reboot, app update, and device-owner transitions:
+- Monotonic-time source and behavior after wall-clock or timezone changes:
+- Serialization of concurrent UI, component, automation, and restored-state attempts:
+- Successful-authentication, administrator, enrollment, and recovery reset conditions:
+- Failure messaging and production diagnostics without credential, account, attempt, or timing disclosure:
+- User-visible non-destructive recovery that preserves emergency and system authentication access:
+
 ## Overlay And Input Integrity
 
 - Overlay or draw-over-other-apps permissions requested:
@@ -68,10 +91,18 @@ in `docs/plans/` with the implementation plan it supports.
 
 ## Background Execution
 
-- Services, receivers, alarms, jobs, or foreground notifications:
-- Behavior while the device is locked:
-- Battery and lifecycle constraints:
-- Expected behavior after reboot:
+- Inventory of every service, receiver, alarm, job, and worker with trigger,
+  exported state, permission boundary, lifetime, and cancellation path:
+- Direct-boot behavior and separation of device-protected from
+  credential-protected storage until user unlock:
+- Foreground-service type, user-visible notification, user stop path, and
+  behavior when foreground execution cannot start:
+- Restart policy after process death, task removal, force-stop, reboot, package
+  update, permission revocation, ownership loss, and feature disable:
+- Doze, app standby, battery, scheduling, duplicate-work, retry, and backoff
+  boundaries:
+- Fail-safe behavior when background work is delayed, denied, duplicated, or
+  restored from stale state:
 
 ## Emergency And System UI Invariants
 
@@ -82,18 +113,41 @@ in `docs/plans/` with the implementation plan it supports.
 - Fail-safe behavior when lock-screen state cannot be determined:
 - Recovery through safe mode or platform settings:
 
-## Data Handling
+## Sensitive Data Lifecycle
 
+- Data classification for lock state, account, device, credential-adjacent,
+  biometric-adjacent, and diagnostic data:
 - Data read from the device:
-- Data stored locally:
+- Internal versus external storage locations with justification:
+- Encryption at rest and key-management boundary:
+- Cloud backup inclusion or exclusion by persisted data category:
+- Device-to-device transfer inclusion or exclusion by persisted data category:
 - Data transmitted off-device:
-- Logs, analytics, and crash-reporting boundaries:
+- Retention period and deletion triggers:
+- Cleanup on disable, sign-out, uninstall, and account removal:
+- Restore validation before recovered state can affect lock-screen behavior:
+- Production log, analytics, and crash-report redaction rules:
 
 ## Manual Verification Matrix
 
 - Fresh install:
+- Normal unmanaged-device mode:
+- Managed and lock-task-allowlisted device mode, if supported:
+- Unsupported or unpermitted ownership state:
 - Permission denial:
 - Permission revocation:
+- Cloud backup, device-transfer, and restore behavior:
+- Rapid repeated authentication failures and maximum attempt rate:
+- Authentication attempt state after process death and reboot:
+- Authentication attempt state after wall-clock and timezone changes:
+- Concurrent attempts from UI, exported components, automation, and restored state:
+- Successful authentication and authorized reset of attempt state:
+- Non-destructive recovery while emergency and system authentication remain available:
+- Locked boot before user unlock and credential-protected data availability:
+- Foreground-service disclosure, user stop, and denied-start behavior:
+- Process death, task removal, force-stop, reboot, and package update:
+- Feature disable, permission revocation, and ownership loss without hidden restart:
+- Doze, standby, duplicate scheduling, retry, and delayed-work behavior:
 - Lock-screen entry and exit:
 - Reboot:
 - Uninstall or disable:

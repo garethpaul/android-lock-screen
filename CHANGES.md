@@ -1,7 +1,36 @@
 # Changes
 
+## 2026-06-19
+
+- Hardened the empty-repository gate against Kotlin DSL, nested manifests,
+  Android source, and Gradle wrapper artifacts.
+- Added isolated hostile mutation tests for implementation and CI privilege
+  bypasses, including write scopes and explicit checkout tokens.
+
+## 2026-06-15
+
+- Added background-execution and direct-boot lifecycle boundaries for component
+  ownership, storage availability, foreground disclosure, scheduling, restart,
+  cancellation, force-stop, permission loss, and feature disable.
+
+## 2026-06-14
+
+- Added authentication-attempt handling boundaries for throttling, durable
+  state, monotonic time, concurrency, reset conditions, diagnostics, recovery,
+  and manual verification before credential-adjacent implementation.
+
+## 2026-06-13
+
+- Added platform ownership and capability boundaries for normal activities,
+  launchers, screen pinning, managed lock task, and secure Keyguard limits.
+- Added sensitive-data lifecycle boundaries for classification, storage,
+  encryption, backup, device transfer, retention, deletion, restore validation,
+  and production diagnostic redaction before implementation begins.
+
 ## 2026-06-12
 
+- Disabled persisted checkout credentials and enforced the sole pinned
+  credential-free workflow boundary.
 - Added activity, task, and component boundary prompts covering exported
   components, external intents, system navigation, recents privacy, and state
   restoration before future lock-screen implementation.

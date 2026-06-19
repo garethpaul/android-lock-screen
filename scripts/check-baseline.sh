@@ -14,20 +14,38 @@ EMPTY_IMPLEMENTATION_GATE_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-09-lock-screen
 EMERGENCY_INVARIANTS_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-10-lock-screen-emergency-invariants.md"
 OVERLAY_INTEGRITY_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-10-lock-screen-overlay-input-integrity.md"
 TASK_COMPONENT_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-12-lock-screen-task-component-boundaries.md"
+CHECKOUT_CREDENTIAL_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-12-checkout-credential-boundary.md"
+DATA_LIFECYCLE_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-13-lock-screen-sensitive-data-lifecycle.md"
+PLATFORM_OWNERSHIP_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-13-lock-screen-platform-ownership.md"
+AUTH_ATTEMPT_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-14-lock-screen-authentication-attempt-boundary.md"
+BACKGROUND_EXECUTION_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-15-lock-screen-background-execution-boundary.md"
 
-for path in \
-  build.gradle \
-  settings.gradle \
-  gradlew \
-  gradlew.bat \
-  app \
-  Application \
-  src; do
-  if [ -e "$ROOT_DIR/$path" ]; then
-    printf '%s\n' "Empty repository baseline must be replaced before adding Android implementation artifacts: $path" >&2
-    exit 1
-  fi
-done
+implementation_artifact=$(find "$ROOT_DIR" \
+  \( -path "$ROOT_DIR/.git" -o -path "$ROOT_DIR/.git/*" \) -prune -o \
+  \( \
+    -type d \( -name app -o -name Application -o -name gradle -o -name src \) -o \
+    \( -type f -o -type l \) \( \
+      -name AndroidManifest.xml -o \
+      -name build.gradle -o \
+      -name build.gradle.kts -o \
+      -name settings.gradle -o \
+      -name settings.gradle.kts -o \
+      -name gradlew -o \
+      -name gradlew.bat -o \
+      -name gradle-wrapper.jar -o \
+      -name gradle-wrapper.properties -o \
+      -name libs.versions.toml -o \
+      -name '*.aidl' -o \
+      -name '*.java' -o \
+      -name '*.kt' \
+    \) \
+  \) -print | head -n 1)
+
+if [ -n "$implementation_artifact" ]; then
+  artifact_path=${implementation_artifact#"$ROOT_DIR"/}
+  printf '%s\n' "Empty repository baseline must be replaced before adding Android implementation artifacts: $artifact_path" >&2
+  exit 1
+fi
 
 if [ ! -f "$ROOT_DIR/README.md" ]; then
   printf '%s\n' "README.md is required for the empty repository baseline." >&2
@@ -86,6 +104,11 @@ fi
 
 if [ ! -f "$TASK_COMPONENT_PLAN_FILE" ]; then
   printf '%s\n' "Future lock-screen task/component boundary plan is missing." >&2
+  exit 1
+fi
+
+if [ ! -f "$CHECKOUT_CREDENTIAL_PLAN_FILE" ]; then
+  printf '%s\n' "Checkout credential boundary plan is missing." >&2
   exit 1
 fi
 
@@ -174,7 +197,7 @@ if ! grep -Fq "device-admin or device-owner behavior" "$ROOT_DIR/README.md"; the
   exit 1
 fi
 
-if ! grep -Fq "background execution" "$ROOT_DIR/README.md"; then
+if ! grep -Eq "background[- ]execution" "$ROOT_DIR/README.md"; then
   printf '%s\n' "README must call out future background execution behavior." >&2
   exit 1
 fi
@@ -211,6 +234,7 @@ fi
 
 for pattern in \
   "## Supported Android Versions" \
+  "## Platform Ownership And Capability" \
   "## Permission And Consent Flow" \
   "## Device Admin Or Device Owner Behavior" \
   "## Threat Model" \
@@ -220,11 +244,92 @@ for pattern in \
   "## Accessibility Service Boundary" \
   "## Background Execution" \
   "## Emergency And System UI Invariants" \
-  "## Data Handling" \
+  "## Sensitive Data Lifecycle" \
   "## Manual Verification Matrix" \
   "## Disable And Uninstall Path"; do
   if ! grep -Fq "$pattern" "$DESIGN_TEMPLATE_FILE"; then
     printf '%s\n' "Lock-screen design template is missing section: $pattern" >&2
+    exit 1
+  fi
+done
+
+for platform_ownership_prompt in \
+  "Selected mode: normal Activity, launcher, screen pinning, or DPC-managed lock task" \
+  "Platform APIs used and capability limits for the selected mode" \
+  "Secure Keyguard credential and biometric boundary, including any fully managed-device exception" \
+  "Device-owner or DPC enrollment and deprovisioning path, if required" \
+  "Lock-task package allowlisting and system UI feature decisions, if required" \
+  "Behavior when lock task is not permitted or ownership prerequisites are absent" \
+  "User-visible exit, fallback, and recovery path for each supported mode" \
+  "Lock-screen replacement, authentication-bypass, or device-ownership claims explicitly not made"; do
+  if ! grep -Fq "$platform_ownership_prompt" "$DESIGN_TEMPLATE_FILE"; then
+    printf '%s\n' "Lock-screen design template is missing platform-ownership prompt: $platform_ownership_prompt" >&2
+    exit 1
+  fi
+done
+
+for platform_verification_prompt in \
+  "Normal unmanaged-device mode" \
+  "Managed and lock-task-allowlisted device mode, if supported" \
+  "Unsupported or unpermitted ownership state"; do
+  if ! grep -Fq "$platform_verification_prompt" "$DESIGN_TEMPLATE_FILE"; then
+    printf '%s\n' "Lock-screen verification matrix is missing ownership case: $platform_verification_prompt" >&2
+    exit 1
+  fi
+done
+
+if [ ! -f "$PLATFORM_OWNERSHIP_PLAN_FILE" ] || \
+   ! grep -Fq "Status: Completed" "$PLATFORM_OWNERSHIP_PLAN_FILE" || \
+   ! grep -Fq "## Verification Completed" "$PLATFORM_OWNERSHIP_PLAN_FILE" || \
+   ! grep -Fq "make check" "$PLATFORM_OWNERSHIP_PLAN_FILE" || \
+   ! grep -Fq "Fourteen hostile mutations" "$PLATFORM_OWNERSHIP_PLAN_FILE" || \
+   ! grep -Fq "developer.android.com/work/dpc/dedicated-devices/lock-task-mode" "$PLATFORM_OWNERSHIP_PLAN_FILE"; then
+  printf '%s\n' "Lock-screen platform ownership plan must record completed verification and sources." >&2
+  exit 1
+fi
+
+for platform_ownership_doc in "$ROOT_DIR/AGENTS.md" "$ROOT_DIR/README.md" "$SECURITY_FILE" "$ROOT_DIR/VISION.md" "$ROOT_DIR/CHANGES.md"; do
+  if ! tr '\n' ' ' < "$platform_ownership_doc" | tr -s '[:space:]' ' ' | \
+      grep -Fiq "platform ownership and capability boundaries"; then
+    printf '%s\n' "$platform_ownership_doc must document platform ownership and capability boundaries." >&2
+    exit 1
+  fi
+done
+
+DESIGN_TEMPLATE_NORMALIZED=$(tr '\n' ' ' < "$DESIGN_TEMPLATE_FILE" | tr -s '[:space:]' ' ')
+for data_lifecycle_prompt in \
+  "Data classification for lock state, account, device, credential-adjacent, biometric-adjacent, and diagnostic data" \
+  "Internal versus external storage locations with justification" \
+  "Encryption at rest and key-management boundary" \
+  "Cloud backup inclusion or exclusion by persisted data category" \
+  "Device-to-device transfer inclusion or exclusion by persisted data category" \
+  "Retention period and deletion triggers" \
+  "Cleanup on disable, sign-out, uninstall, and account removal" \
+  "Restore validation before recovered state can affect lock-screen behavior" \
+  "Production log, analytics, and crash-report redaction rules"; do
+  if ! printf '%s\n' "$DESIGN_TEMPLATE_NORMALIZED" | grep -Fq "$data_lifecycle_prompt"; then
+    printf '%s\n' "Lock-screen design template is missing data-lifecycle prompt: $data_lifecycle_prompt" >&2
+    exit 1
+  fi
+done
+
+if ! grep -Fq "Cloud backup, device-transfer, and restore behavior" "$DESIGN_TEMPLATE_FILE"; then
+  printf '%s\n' "Lock-screen verification matrix must cover backup, transfer, and restore behavior." >&2
+  exit 1
+fi
+
+if [ ! -f "$DATA_LIFECYCLE_PLAN_FILE" ] || \
+   ! grep -Fq "Status: Completed" "$DATA_LIFECYCLE_PLAN_FILE" || \
+   ! grep -Fq "make check" "$DATA_LIFECYCLE_PLAN_FILE" || \
+   ! grep -Fq "hostile mutations" "$DATA_LIFECYCLE_PLAN_FILE"; then
+  printf '%s\n' "Lock-screen sensitive-data lifecycle plan must record completed verification." >&2
+  exit 1
+fi
+
+for data_lifecycle_doc in "$ROOT_DIR/AGENTS.md" "$ROOT_DIR/README.md" "$SECURITY_FILE" "$ROOT_DIR/VISION.md" "$ROOT_DIR/CHANGES.md"; do
+  if ! tr '\n' ' ' < "$data_lifecycle_doc" | tr -s '[:space:]' ' ' | \
+      grep -Fiq "sensitive-data lifecycle boundaries"; then
+    printf '%s\n' "$data_lifecycle_doc must document sensitive-data lifecycle boundaries." >&2
     exit 1
   fi
 done
@@ -264,6 +369,106 @@ for emergency_prompt in \
   "Recovery through safe mode or platform settings"; do
   if ! grep -Fq "$emergency_prompt" "$DESIGN_TEMPLATE_FILE"; then
     printf '%s\n' "Lock-screen design template is missing invariant: $emergency_prompt" >&2
+    exit 1
+  fi
+done
+
+if [ "$(grep -Fc "## Authentication Attempt Handling" "$DESIGN_TEMPLATE_FILE" || true)" -ne 1 ]; then
+  printf '%s\n' "Lock-screen design template must keep one authentication-attempt section." >&2
+  exit 1
+fi
+
+for auth_attempt_prompt in \
+  "Platform-delegated authentication versus app-observed secret or attempt data" \
+  "Attempt accounting scope across user, account, device, process, and credential type" \
+  "Progressive delay, throttling, or lockout policy and maximum attempt rate" \
+  "Persistence across process death, reboot, app update, and device-owner transitions" \
+  "Monotonic-time source and behavior after wall-clock or timezone changes" \
+  "Serialization of concurrent UI, component, automation, and restored-state attempts" \
+  "Successful-authentication, administrator, enrollment, and recovery reset conditions" \
+  "Failure messaging and production diagnostics without credential, account, attempt, or timing disclosure" \
+  "User-visible non-destructive recovery that preserves emergency and system authentication access"; do
+  if ! grep -Fq "$auth_attempt_prompt" "$DESIGN_TEMPLATE_FILE"; then
+    printf '%s\n' "Lock-screen design template is missing authentication-attempt prompt: $auth_attempt_prompt" >&2
+    exit 1
+  fi
+done
+
+for auth_attempt_verification in \
+  "Rapid repeated authentication failures and maximum attempt rate" \
+  "Authentication attempt state after process death and reboot" \
+  "Authentication attempt state after wall-clock and timezone changes" \
+  "Concurrent attempts from UI, exported components, automation, and restored state" \
+  "Successful authentication and authorized reset of attempt state" \
+  "Non-destructive recovery while emergency and system authentication remain available"; do
+  if ! grep -Fq "$auth_attempt_verification" "$DESIGN_TEMPLATE_FILE"; then
+    printf '%s\n' "Lock-screen verification matrix is missing authentication-attempt case: $auth_attempt_verification" >&2
+    exit 1
+  fi
+done
+
+if [ ! -f "$AUTH_ATTEMPT_PLAN_FILE" ] || \
+   ! grep -Fq "Status: Completed" "$AUTH_ATTEMPT_PLAN_FILE" || \
+   ! grep -Fq "make check" "$AUTH_ATTEMPT_PLAN_FILE" || \
+   ! grep -Fq "hostile mutations" "$AUTH_ATTEMPT_PLAN_FILE"; then
+  printf '%s\n' "Lock-screen authentication-attempt plan must record completed verification." >&2
+  exit 1
+fi
+
+for auth_attempt_doc in "$ROOT_DIR/AGENTS.md" "$ROOT_DIR/README.md" "$SECURITY_FILE" "$ROOT_DIR/VISION.md" "$ROOT_DIR/CHANGES.md"; do
+  if ! tr '\n' ' ' < "$auth_attempt_doc" | tr -s '[:space:]' ' ' | \
+      grep -Fiq "authentication-attempt handling boundaries"; then
+    printf '%s\n' "$auth_attempt_doc must document authentication-attempt handling boundaries." >&2
+    exit 1
+  fi
+done
+
+if [ "$(grep -Fc "## Background Execution" "$DESIGN_TEMPLATE_FILE")" -ne 1 ]; then
+  printf '%s\n' "Lock-screen design template must keep one background-execution section." >&2
+  exit 1
+fi
+
+for background_prompt in \
+  "Inventory of every service, receiver, alarm, job, and worker with trigger" \
+  "exported state, permission boundary, lifetime, and cancellation path" \
+  "Direct-boot behavior and separation of device-protected from" \
+  "credential-protected storage until user unlock" \
+  "Foreground-service type, user-visible notification, user stop path" \
+  "behavior when foreground execution cannot start" \
+  "Restart policy after process death, task removal, force-stop, reboot, package" \
+  "permission revocation, ownership loss, and feature disable" \
+  "Doze, app standby, battery, scheduling, duplicate-work, retry, and backoff" \
+  "Fail-safe behavior when background work is delayed, denied, duplicated, or"; do
+  if ! grep -Fq "$background_prompt" "$DESIGN_TEMPLATE_FILE"; then
+    printf '%s\n' "Lock-screen design template is missing background-execution prompt: $background_prompt" >&2
+    exit 1
+  fi
+done
+
+for background_verification in \
+  "Locked boot before user unlock and credential-protected data availability" \
+  "Foreground-service disclosure, user stop, and denied-start behavior" \
+  "Process death, task removal, force-stop, reboot, and package update" \
+  "Feature disable, permission revocation, and ownership loss without hidden restart" \
+  "Doze, standby, duplicate scheduling, retry, and delayed-work behavior"; do
+  if ! grep -Fq "$background_verification" "$DESIGN_TEMPLATE_FILE"; then
+    printf '%s\n' "Lock-screen verification matrix is missing background-execution case: $background_verification" >&2
+    exit 1
+  fi
+done
+
+if [ ! -f "$BACKGROUND_EXECUTION_PLAN_FILE" ] || \
+   ! grep -Fq "Status: Completed" "$BACKGROUND_EXECUTION_PLAN_FILE" || \
+   ! grep -Fq "make check" "$BACKGROUND_EXECUTION_PLAN_FILE" || \
+   ! grep -Fq "hostile mutations" "$BACKGROUND_EXECUTION_PLAN_FILE"; then
+  printf '%s\n' "Lock-screen background-execution plan must record completed verification." >&2
+  exit 1
+fi
+
+for background_doc in "$ROOT_DIR/AGENTS.md" "$ROOT_DIR/README.md" "$SECURITY_FILE" "$ROOT_DIR/VISION.md" "$ROOT_DIR/CHANGES.md"; do
+  if ! tr '\n' ' ' < "$background_doc" | tr -s '[:space:]' ' ' | \
+      grep -Fiq "background-execution and direct-boot lifecycle boundaries"; then
+    printf '%s\n' "$background_doc must document background-execution and direct-boot lifecycle boundaries." >&2
     exit 1
   fi
 done
@@ -386,9 +591,115 @@ for workflow_contract in \
   fi
 done
 
+workflow_files=$(find "$ROOT_DIR/.github/workflows" -mindepth 1 -maxdepth 1 -type f -print | sort)
+if [ "$workflow_files" != "$CI_WORKFLOW" ]; then
+  printf '%s\n' "GitHub Actions workflow inventory must contain only check.yml." >&2
+  exit 1
+fi
 
-if ! grep -Fq 'ROOT := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))' "$ROOT_DIR/Makefile"; then
-  printf '%s\n' "Makefile must resolve repository paths from its own location." >&2
+if ! awk '
+  function finish_step() {
+    if (checkout) {
+      checkout_count++
+      if (with_block && persist_false) {
+        secure_checkout_count++
+      }
+    }
+    checkout = 0
+    with_block = 0
+    persist_false = 0
+  }
+  /^      - / { finish_step() }
+  /^        uses: actions\/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6\.0\.3$/ { checkout = 1 }
+  checkout && /^        with:$/ { with_block = 1 }
+  checkout && with_block && /^          persist-credentials: false$/ { persist_false = 1 }
+  END {
+    finish_step()
+    exit !(checkout_count == 1 && secure_checkout_count == 1)
+  }
+' "$CI_WORKFLOW" ||
+   [ "$(grep -Fc "persist-credentials:" "$CI_WORKFLOW")" -ne 1 ] ||
+   grep -Fq "persist-credentials: true" "$CI_WORKFLOW"; then
+  printf '%s\n' "GitHub Actions must use one pinned credential-free checkout." >&2
+  exit 1
+fi
+
+if [ "$(grep -Ec '^[[:space:]]*permissions:' "$CI_WORKFLOW")" -ne 1 ] || ! awk '
+  /^permissions:$/ {
+    permissions_blocks++
+    in_permissions = 1
+    next
+  }
+  in_permissions && /^[^[:space:]]/ {
+    in_permissions = 0
+  }
+  in_permissions && /^  contents: read$/ {
+    contents_read++
+    next
+  }
+  in_permissions && /^  [[:alnum:]_-]+:/ {
+    unexpected_permission = 1
+  }
+  END {
+    exit !(permissions_blocks == 1 && contents_read == 1 && !unexpected_permission)
+  }
+' "$CI_WORKFLOW"; then
+  printf '%s\n' "GitHub Actions permissions must contain only contents: read." >&2
+  exit 1
+fi
+
+if grep -Eq '^[[:space:]]+token:' "$CI_WORKFLOW" || \
+   grep -Fq '${{ secrets.' "$CI_WORKFLOW"; then
+  printf '%s\n' "GitHub Actions checkout must not receive an explicit token or repository secret." >&2
+  exit 1
+fi
+
+if ! grep -Fq "status: completed" "$CHECKOUT_CREDENTIAL_PLAN_FILE" ||
+   ! grep -Fq "persist-credentials: false" "$CHECKOUT_CREDENTIAL_PLAN_FILE" ||
+   ! grep -Fq "hostile mutations rejected" "$CHECKOUT_CREDENTIAL_PLAN_FILE"; then
+  printf '%s\n' "Checkout credential plan must record completed verification." >&2
+  exit 1
+fi
+
+guidance=$(cat "$ROOT_DIR/README.md" "$ROOT_DIR/SECURITY.md" "$ROOT_DIR/VISION.md" "$ROOT_DIR/CHANGES.md" | tr '\n' ' ')
+case "$guidance" in
+  *"checkout credentials are not persisted"*"credential-free checkout"*) ;;
+  *)
+    printf '%s\n' "Repository guidance must document the credential-free checkout boundary." >&2
+    exit 1
+    ;;
+esac
+
+
+if ! grep -Fxq 'override ROOT := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))' "$ROOT_DIR/Makefile"; then
+  printf '%s\n' "Makefile must protect repository paths from command-line overrides." >&2
+  exit 1
+fi
+
+if [ "$(grep -Fc '$(ROOT)scripts/check-baseline.sh' "$ROOT_DIR/Makefile")" -ne 2 ]; then
+  printf '%s\n' "Both SDK-free baseline commands must use the protected root." >&2
+  exit 1
+fi
+
+make_tab=$(printf '\t')
+if ! grep -Fxq "${make_tab}\$(ROOT)tests/check-baseline-tests.sh" "$ROOT_DIR/Makefile"; then
+  printf '%s\n' "Makefile test must run hostile baseline regression tests." >&2
+  exit 1
+fi
+
+if ! grep -Fxq 'verify: lint test build' "$ROOT_DIR/Makefile" || \
+   ! grep -Fxq 'check: verify' "$ROOT_DIR/Makefile"; then
+  printf '%s\n' "Makefile must preserve lint, test, build, verify, and check ordering." >&2
+  exit 1
+fi
+
+if ! grep -Fxq "${make_tab}@echo \"No Android project is checked in yet; build skipped.\"" "$ROOT_DIR/Makefile"; then
+  printf '%s\n' "Makefile must preserve the explicit empty-project build skip." >&2
+  exit 1
+fi
+
+if ! grep -Fxq "Status: Completed" "$ROOT_DIR/docs/plans/2026-06-14-lock-screen-make-root-override-protection.md"; then
+  printf '%s\n' "Lock-screen Make root protection plan must record completed status." >&2
   exit 1
 fi
 
