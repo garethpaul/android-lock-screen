@@ -73,5 +73,17 @@ expect_reject workflow_checkout_token \
           token: \${{ secrets.REPOSITORY_TOKEN }}
 " .github/workflows/check.yml && rm .github/workflows/check.yml.bak' \
   'must not receive an explicit token'
+expect_reject missing_multi_user_profile_boundary \
+  'sed -i.bak "/## Multi-User And Profile Boundaries/,/## Overlay And Input Integrity/d" docs/templates/lock-screen-permission-design.md && rm docs/templates/lock-screen-permission-design.md.bak' \
+  'Lock-screen design template is missing section: ## Multi-User And Profile Boundaries'
+expect_reject missing_cross_user_boundary \
+  'sed -i.bak "/Cross-user APIs, components, permissions, or shared storage intentionally/d" docs/templates/lock-screen-permission-design.md && rm docs/templates/lock-screen-permission-design.md.bak' \
+  'Lock-screen design template is missing multi-user/profile prompt: Cross-user APIs, components, permissions, or shared storage intentionally'
+expect_reject missing_user_switch_boundary \
+  'sed -i.bak "/Handling of in-flight authentication, background work, and restored state/d" docs/templates/lock-screen-permission-design.md && rm docs/templates/lock-screen-permission-design.md.bak' \
+  'Lock-screen design template is missing multi-user/profile prompt: Handling of in-flight authentication, background work, and restored state'
+expect_reject missing_multi_user_verification \
+  'sed -i.bak "/Per-user storage and policy isolation plus rejection of unauthorized cross-user calls/d" docs/templates/lock-screen-permission-design.md && rm docs/templates/lock-screen-permission-design.md.bak' \
+  'Lock-screen verification matrix is missing multi-user/profile case: Per-user storage and policy isolation plus rejection of unauthorized cross-user calls'
 
 printf '%s\n' "Android lock screen hostile baseline tests passed."

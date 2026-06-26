@@ -54,6 +54,8 @@
   state, concurrency, reset conditions, diagnostics, and safe recovery.
 - Background-execution and direct-boot lifecycle boundaries covering component
   triggers, storage availability, visible foreground work, restart, and disable.
+- Multi-user and profile boundaries covering per-user authority, storage,
+  switching, cross-user calls, work profiles, guests, cleanup, and recovery.
 
 ## Agent workflow
 

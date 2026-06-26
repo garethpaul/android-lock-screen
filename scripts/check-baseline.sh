@@ -19,6 +19,7 @@ DATA_LIFECYCLE_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-13-lock-screen-sensitive-
 PLATFORM_OWNERSHIP_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-13-lock-screen-platform-ownership.md"
 AUTH_ATTEMPT_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-14-lock-screen-authentication-attempt-boundary.md"
 BACKGROUND_EXECUTION_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-15-lock-screen-background-execution-boundary.md"
+MULTI_USER_PROFILE_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-26-lock-screen-multi-user-profile-boundary.md"
 
 implementation_artifact=$(find "$ROOT_DIR" \
   \( -path "$ROOT_DIR/.git" -o -path "$ROOT_DIR/.git/*" \) -prune -o \
@@ -239,6 +240,7 @@ for pattern in \
   "## Device Admin Or Device Owner Behavior" \
   "## Threat Model" \
   "## Credential And Biometric Boundaries" \
+  "## Multi-User And Profile Boundaries" \
   "## Overlay And Input Integrity" \
   "## Activity Task And Component Boundaries" \
   "## Accessibility Service Boundary" \
@@ -249,6 +251,54 @@ for pattern in \
   "## Disable And Uninstall Path"; do
   if ! grep -Fq "$pattern" "$DESIGN_TEMPLATE_FILE"; then
     printf '%s\n' "Lock-screen design template is missing section: $pattern" >&2
+    exit 1
+  fi
+done
+
+if [ "$(grep -Fc "## Multi-User And Profile Boundaries" "$DESIGN_TEMPLATE_FILE" || true)" -ne 1 ]; then
+  printf '%s\n' "Lock-screen design template must keep one multi-user/profile section." >&2
+  exit 1
+fi
+
+for multi_user_prompt in \
+  "Supported Android user and profile types, including primary, secondary" \
+  "guest, managed work, clone, and private profiles" \
+  "Device-owner, profile-owner, administrator, and ordinary-app authority" \
+  "Per-user and per-profile scoping for lock state, policy, attempts" \
+  "Behavior during user or profile start, stop, switch, unlock, quiet mode" \
+  "Cross-user APIs, components, permissions, or shared storage intentionally" \
+  "Handling of in-flight authentication, background work, and restored state" \
+  "Cleanup after secondary-user removal, guest deletion, logout, work-profile" \
+  "Fail-safe behavior when user or profile identity is unavailable, stale"; do
+  if ! grep -Fq "$multi_user_prompt" "$DESIGN_TEMPLATE_FILE"; then
+    printf '%s\n' "Lock-screen design template is missing multi-user/profile prompt: $multi_user_prompt" >&2
+    exit 1
+  fi
+done
+
+for multi_user_verification in \
+  "Secondary-user and guest creation, switch, logout, deletion, and re-creation" \
+  "Work-profile enable, disable, quiet mode, unlock, and removal" \
+  "In-flight authentication or background work across a user or profile switch" \
+  "Per-user storage and policy isolation plus rejection of unauthorized cross-user calls"; do
+  if ! grep -Fq "$multi_user_verification" "$DESIGN_TEMPLATE_FILE"; then
+    printf '%s\n' "Lock-screen verification matrix is missing multi-user/profile case: $multi_user_verification" >&2
+    exit 1
+  fi
+done
+
+if [ ! -f "$MULTI_USER_PROFILE_PLAN_FILE" ] || \
+   ! grep -Fq "Status: Completed" "$MULTI_USER_PROFILE_PLAN_FILE" || \
+   ! grep -Fq "make check" "$MULTI_USER_PROFILE_PLAN_FILE" || \
+   ! grep -Fq "hostile mutations" "$MULTI_USER_PROFILE_PLAN_FILE"; then
+  printf '%s\n' "Lock-screen multi-user/profile plan must record completed verification." >&2
+  exit 1
+fi
+
+for multi_user_doc in "$ROOT_DIR/AGENTS.md" "$ROOT_DIR/README.md" "$SECURITY_FILE" "$ROOT_DIR/VISION.md" "$ROOT_DIR/CHANGES.md"; do
+  if ! tr '\n' ' ' < "$multi_user_doc" | tr -s '[:space:]' ' ' | \
+      grep -Fiq "multi-user and profile boundaries"; then
+    printf '%s\n' "$multi_user_doc must document multi-user and profile boundaries." >&2
     exit 1
   fi
 done
