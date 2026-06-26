@@ -77,6 +77,10 @@ ownership scope, cleanup, and fail-safe recovery.
 
 Dependency updates should come from trusted package managers and should keep lockfiles in sync when lockfiles exist. Do not commit credentials, private keys, tokens, generated secrets, or machine-local configuration. If a vulnerability depends on a compromised package, typosquatting risk, insecure transitive dependency, or unsafe build step, include the package name, affected version, and the path through which it is used.
 
+While the repository remains implementation-empty, symlinked Android source or
+Gradle directory roles are rejected without traversal so the baseline cannot
+validate the checkout while implementation content is selected from elsewhere.
+
 ## Safe Research Guidelines
 
 Good-faith research is welcome when it stays within these boundaries:

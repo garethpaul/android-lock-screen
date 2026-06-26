@@ -20,11 +20,13 @@ PLATFORM_OWNERSHIP_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-13-lock-screen-platfo
 AUTH_ATTEMPT_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-14-lock-screen-authentication-attempt-boundary.md"
 BACKGROUND_EXECUTION_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-15-lock-screen-background-execution-boundary.md"
 MULTI_USER_PROFILE_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-26-lock-screen-multi-user-profile-boundary.md"
+EMPTY_SYMLINK_GATE_PLAN_FILE="$ROOT_DIR/docs/plans/2026-06-26-empty-implementation-symlink-boundary.md"
 
 implementation_artifact=$(find "$ROOT_DIR" \
   \( -path "$ROOT_DIR/.git" -o -path "$ROOT_DIR/.git/*" \) -prune -o \
   \( \
-    -type d \( -name app -o -name Application -o -name gradle -o -name src \) -o \
+    \( -type d -o -type l \) \
+      \( -name app -o -name Application -o -name gradle -o -name src \) -o \
     \( -type f -o -type l \) \( \
       -name AndroidManifest.xml -o \
       -name build.gradle -o \
@@ -294,6 +296,28 @@ if [ ! -f "$MULTI_USER_PROFILE_PLAN_FILE" ] || \
   printf '%s\n' "Lock-screen multi-user/profile plan must record completed verification." >&2
   exit 1
 fi
+
+if [ ! -f "$EMPTY_SYMLINK_GATE_PLAN_FILE" ] || \
+   ! grep -Fq "Status: Completed" "$EMPTY_SYMLINK_GATE_PLAN_FILE" || \
+   ! grep -Fq "make check" "$EMPTY_SYMLINK_GATE_PLAN_FILE" || \
+   ! grep -Fq "src -> /tmp" "$EMPTY_SYMLINK_GATE_PLAN_FILE"; then
+  printf '%s\n' "Empty-implementation symlink plan must record completed red-first verification." >&2
+  exit 1
+fi
+
+if ! grep -Fq -- "-type d -o -type l" "$ROOT_DIR/scripts/check-baseline.sh" || \
+   ! grep -Fq "symlinked_source_directory" "$ROOT_DIR/tests/check-baseline-tests.sh"; then
+  printf '%s\n' "Empty-implementation checks must reject symlinked Android directory roles." >&2
+  exit 1
+fi
+
+for symlink_boundary_doc in "$ROOT_DIR/AGENTS.md" "$ROOT_DIR/README.md" "$SECURITY_FILE" "$ROOT_DIR/VISION.md" "$ROOT_DIR/CHANGES.md"; do
+  if ! tr '\n' ' ' < "$symlink_boundary_doc" | tr -s '[:space:]' ' ' | \
+      grep -Fiq "symlinked Android source"; then
+    printf '%s\n' "$symlink_boundary_doc must document the empty-implementation symlink boundary." >&2
+    exit 1
+  fi
+done
 
 for multi_user_doc in "$ROOT_DIR/AGENTS.md" "$ROOT_DIR/README.md" "$SECURITY_FILE" "$ROOT_DIR/VISION.md" "$ROOT_DIR/CHANGES.md"; do
   if ! tr '\n' ' ' < "$multi_user_doc" | tr -s '[:space:]' ' ' | \

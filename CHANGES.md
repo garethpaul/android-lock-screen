@@ -2,6 +2,25 @@
 
 ## 2026-06-26
 
+- **Timestamp:** 2026-06-26 13:28:16 PDT.
+- **Priority:** Empty-implementation gate integrity.
+- **Summary:** Reject symlinked Android source and Gradle directory roles
+  without following them, closing a path where external
+  implementation content could remain outside the checkout while the baseline
+  reported an empty repository.
+- **Files:** `scripts/check-baseline.sh`, `tests/check-baseline-tests.sh`,
+  `README.md`, `SECURITY.md`, `VISION.md`, `AGENTS.md`, `CHANGES.md`, and
+  `docs/plans/2026-06-26-empty-implementation-symlink-boundary.md`.
+- **Tests:** Added a red-first hostile `src` symlink mutation; all 13 hostile
+  mutations and every Make alias pass from the repository and an external
+  absolute Makefile path. Restoring directory-only classification makes the
+  new mutation fail.
+- **Findings:** The artifact scan matched `src`, `app`, `Application`, and
+  `gradle` only when they were real directories, so equivalent symlink entries
+  survived without traversal.
+- **Blockers:** None.
+- **Next action:** Verify the exact hosted shell baseline head before merge.
+
 - Added multi-user and profile boundaries for primary, secondary, guest,
   managed work, clone, and private profiles before implementation can land.
 - Required per-user authority and state, user/profile switching, cross-user API
