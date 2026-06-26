@@ -1,5 +1,14 @@
 # Changes
 
+## 2026-06-26
+
+- Added multi-user and profile boundaries for primary, secondary, guest,
+  managed work, clone, and private profiles before implementation can land.
+- Required per-user authority and state, user/profile switching, cross-user API
+  restrictions, in-flight work invalidation, cleanup, and fail-safe recovery.
+- Added manual verification cases and four hostile mutations for section,
+  cross-user, switch-state, and isolation-matrix removal.
+
 ## 2026-06-19
 
 - Hardened the empty-repository gate against Kotlin DSL, nested manifests,

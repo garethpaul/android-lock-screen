@@ -51,6 +51,9 @@ Priority:
   retained, deleted, logged, or transmitted
 - Require platform ownership and capability boundaries before choosing normal
   activity, launcher, screen-pinning, or DPC-managed lock-task behavior
+- Require multi-user and profile boundaries before lock state, policy,
+  authentication attempts, background work, or persisted data can cross user
+  and profile lifecycle transitions
 - Keep a reusable security design template available before implementation
   scaffolding is added
 

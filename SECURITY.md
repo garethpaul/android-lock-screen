@@ -68,6 +68,10 @@ Future plans must define background-execution and direct-boot lifecycle
 boundaries before adding services, receivers, alarms, jobs, or workers,
 including storage availability, foreground disclosure, cancellation, restart,
 force-stop, permission revocation, ownership loss, and feature disable.
+Future plans must define multi-user and profile boundaries before lock-screen
+state or policy can affect primary, secondary, guest, managed work, clone, or
+private profiles, including per-user storage, switching, cross-user calls,
+ownership scope, cleanup, and fail-safe recovery.
 
 ## Dependency and Supply Chain Security
 

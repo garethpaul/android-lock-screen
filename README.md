@@ -47,8 +47,9 @@ Before app code is added, establish:
   background-execution and direct-boot lifecycle boundaries,
   emergency and system UI invariants, overlay and input integrity boundaries,
   activity/task/component boundaries, platform ownership and capability
-  boundaries, authentication-attempt handling boundaries, and sensitive data
-  handling before any lock-screen code is added.
+  boundaries, authentication-attempt handling boundaries, multi-user and
+  profile boundaries, and sensitive data handling before any lock-screen code
+  is added.
   Sensitive-data lifecycle boundaries must cover
   storage, encryption, cloud backup, device transfer, retention, deletion,
   restore validation, and production diagnostics. Use
@@ -106,6 +107,9 @@ authentication-adjacent UI or behavior is added.
 Authentication-attempt handling boundaries must define throttling, durable
 attempt state, time semantics, concurrent attempts, reset conditions,
 diagnostic redaction, and non-destructive recovery.
+Multi-user and profile boundaries must define supported users and profiles,
+per-user authority and state, switching behavior, cross-user API restrictions,
+work-profile and guest cleanup, and fail-safe recovery.
 It must also define sensitive-data lifecycle boundaries before any lock-state,
 account, device, or diagnostic data is persisted or transmitted.
 Future background components must document direct-boot storage, foreground

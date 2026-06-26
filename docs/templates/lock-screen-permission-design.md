@@ -59,6 +59,25 @@ in `docs/plans/` with the implementation plan it supports.
 - Boundaries that prevent spoofing system authentication:
 - User-visible recovery if unlock or authentication state changes:
 
+## Multi-User And Profile Boundaries
+
+- Supported Android user and profile types, including primary, secondary,
+  guest, managed work, clone, and private profiles:
+- Device-owner, profile-owner, administrator, and ordinary-app authority for
+  each supported user or profile type:
+- Per-user and per-profile scoping for lock state, policy, attempts,
+  credentials, notifications, diagnostics, and persisted data:
+- Behavior during user or profile start, stop, switch, unlock, quiet mode,
+  logout, and foreground/background transitions:
+- Cross-user APIs, components, permissions, or shared storage intentionally
+  not used, or exact system-only justification and caller validation:
+- Handling of in-flight authentication, background work, and restored state
+  when the active user or profile changes:
+- Cleanup after secondary-user removal, guest deletion, logout, work-profile
+  removal, or ownership transfer:
+- Fail-safe behavior when user or profile identity is unavailable, stale, or
+  changes during a sensitive operation:
+
 ## Authentication Attempt Handling
 
 - Platform-delegated authentication versus app-observed secret or attempt data:
@@ -143,6 +162,10 @@ in `docs/plans/` with the implementation plan it supports.
 - Concurrent attempts from UI, exported components, automation, and restored state:
 - Successful authentication and authorized reset of attempt state:
 - Non-destructive recovery while emergency and system authentication remain available:
+- Secondary-user and guest creation, switch, logout, deletion, and re-creation:
+- Work-profile enable, disable, quiet mode, unlock, and removal:
+- In-flight authentication or background work across a user or profile switch:
+- Per-user storage and policy isolation plus rejection of unauthorized cross-user calls:
 - Locked boot before user unlock and credential-protected data availability:
 - Foreground-service disclosure, user stop, and denied-start behavior:
 - Process death, task removal, force-stop, reboot, and package update:
