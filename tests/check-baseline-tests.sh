@@ -57,6 +57,9 @@ expect_reject kotlin_source \
 expect_reject gradle_wrapper \
   'mkdir -p gradle/wrapper && printf "%s\n" "distributionUrl=https://example.invalid/gradle.zip" > gradle/wrapper/gradle-wrapper.properties' \
   'Android implementation artifacts'
+expect_reject symlinked_source_directory \
+  'ln -s /tmp src' \
+  'Android implementation artifacts'
 expect_reject workflow_write_permission \
   'sed -i.bak "/contents: read/a\\
   pull-requests: write

@@ -56,6 +56,8 @@
   triggers, storage availability, visible foreground work, restart, and disable.
 - Multi-user and profile boundaries covering per-user authority, storage,
   switching, cross-user calls, work profiles, guests, cleanup, and recovery.
+- The empty-implementation gate treats symlinked Android source and Gradle
+  directory roles as implementation artifacts without traversing them.
 
 ## Agent workflow
 

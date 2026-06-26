@@ -18,7 +18,9 @@ No Gradle project is checked in yet. Do not add Gradle build, test, or install
 commands until an Android project exists; the repository-level `make build`
 target reports a skip for now.
 The SDK-free baseline fails if Android implementation artifacts appear while
-this empty-repository contract is still in force.
+this empty-repository contract is still in force. Symlinked Android source or
+Gradle directory roles are rejected as artifacts without following them outside
+the checkout.
 
 ## Repository Contents
 
